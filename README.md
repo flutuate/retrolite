@@ -1,2 +1,2 @@
 # retrolite
-Http client for Dart
+An HTTP client for Dart
