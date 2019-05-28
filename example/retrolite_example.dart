@@ -14,7 +14,7 @@ main() {
 
   //var api = new TmdbApi(retrolite);
 
-  var api = retrolite.create<TmdbApi>( new TmdbApi() );
+  var api = retrolite.create<TmdbApi>( new TmdbApi('1f54bd990f1cdfb230adb312546d765d') );
 }
 
 /// Returns an instance of the default http client.
