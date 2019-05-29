@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 
-import 'IRestClient.dart';
+import 'package:retrolite/src/http/IRestClient.dart';
 
 abstract class RetroliteParameters
 extends IRestClient

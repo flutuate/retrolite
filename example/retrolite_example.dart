@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
+import 'package:retrolite/flutuate_http.dart';
 import 'package:retrolite/retrolite.dart';
 
 import 'tmdb/TmdbApi.dart';
 
 main() {
   Retrolite retrolite = Retrolite(
-    baseUrl: 'https://api.themoviedb.org/3/',
+    'https://api.themoviedb.org/3/',
     httpClient: newHttpClient(),
   );
 
@@ -18,7 +19,7 @@ main() {
 
 /// Returns an instance of the default http client.
 http.BaseClient newHttpClient() {
-  return http.Client();
+  return newDefaultHttpClient();
 }
 
 /// Returns an http client that ignores unsafe SSL certificates.

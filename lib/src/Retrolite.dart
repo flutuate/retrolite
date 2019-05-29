@@ -2,19 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/io_client.dart';
 import 'package:http/http.dart' as http;
-import 'package:retrolite/src/IApi.dart';
-import 'package:retrolite/src/IRestClient.dart';
 
-import 'Query.dart';
+import '../flutuate_http.dart';
 import 'RetroliteParameters.dart';
-import 'core.dart';
+import 'package:retrolite/src/http/core.dart';
 
 class Retrolite extends RetroliteParameters
 {
   Map<Type, IApi> _apis = {};
 
-  Retrolite({String baseUrl, http.BaseClient httpClient})
-    : super(baseUrl, httpClient)
+  Retrolite(String baseUrl, {http.BaseClient httpClient})
+    : super(baseUrl.trim(), httpClient ?? newDefaultHttpClient())
   {
     /*Logger.root.level = Level.ALL; // defaults to Level.INFO
     Logger.root.onRecord.listen((record) {
@@ -23,8 +21,14 @@ class Retrolite extends RetroliteParameters
   }
 
   @override
-  Future<T> post<T>() async {
-    Uri uri = buildUri();
+  Future<TReturn> post<TReturn>(String route,
+      {Map<String, HeaderValue> headers,
+        ContentType contentType,
+        Map<String, dynamic> formDataParameters,
+        Map<String, dynamic> queryParameters,
+        dynamic body}) async
+  {
+    /*Uri uri = buildUri();
     IOClient ioClient = new IOClient(client);
 
     http.Client client = newLoggingClient(ioClient);
@@ -37,14 +41,14 @@ class Retrolite extends RetroliteParameters
 
     // TODO falta tratar status/retornos com erros
     String body = await response.body;
-    print(body);
+    print(body);*/
     return null;
   }
 
-  Map<String, String> _buildHeaders() =>
+  /*Map<String, String> buildHeaders() =>
       { "Content-Type": contentType.toString() };
 
-  dynamic _buildContent() {
+  dynamic buildContent() {
     if( isValid(content) ) {
       if( isTypeJson(contentType) ) {
         return json.encode(content);
@@ -54,7 +58,7 @@ class Retrolite extends RetroliteParameters
       }
     }
     return null;
-  }
+  }*/
 
   bool isTypeJson(ContentType contentType)
     => contentType.subType == ContentType.json.subType;
@@ -63,36 +67,71 @@ class Retrolite extends RetroliteParameters
     => contentType.subType == ContentType.text.subType;
 
   @override
-  Future<T> get<T>() async {
-    Uri uri = buildUri();
-    HttpClientRequest request = await _httpClient.getUrl(uri);
+  Future<TReturn> get<TReturn>(String route,
+      {Map<String, HeaderValue> headers,
+        ContentType contentType,
+        Map<String, dynamic> formDataParameters,
+        Map<String, dynamic> queryParameters}) async
+  {
+    /*http.Response response = await httpClient.get(
+        buildUrl(route, queryParameters),
+        headers: _buildHeaders(headers)
+    );
     request.headers.contentType = contentType;
     HttpClientResponse response = await request.close();
     String content = await response.transform(utf8.decoder).join();
-    T.runtimeType is String;
-    if( typeof<T>() == String ) {
-      return Future<T>.value(content as T);
-    }
+    TReturn.runtimeType is String;
+    if (typeof<TReturn>() == String) {
+      return Future<TReturn>.value(content as TReturn);
+    }*/
     return null;
   }
 
-  Uri buildUri() {
-    String uri = _params.baseUrl + route;
-    String queryParams = '';
-    for( var name in parameters.keys ) {
-      var param = parameters[name];
-      if( param is Query ) {
-        if( queryParams.isEmpty ) {
-          queryParams = '?';
-        }
-        else {
-          queryParams += '&';
-        }
-        queryParams += '$name=${param.value}';
+  Uri buildUrl(String route, [Map<String, dynamic> queryParameters]) {
+    String url = buildHost() + route;
+    String queryParams = buildQueryParameters(queryParameters ?? {});
+    return Uri.parse(url+queryParams);
+  }
+
+  String buildHost() => baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+
+  String buildQueryParameters(Map<String, dynamic> queryParameters) {
+    String formattedParameters = '';
+    for( String name in queryParameters.keys ) {
+      final value = queryParameters[name];
+      final formattedValue = buildFormattedQueryParameterValue(value);
+      final delimiter = formattedParameters.isEmpty ? '?' : '&';
+      formattedParameters += '$delimiter$name=$formattedValue';
+    }
+    return formattedParameters;
+  }
+
+  String buildFormattedQueryParameterValue(dynamic value) {
+    if( value == null ) {
+      return '';
+    }
+    if( value is List ) {
+      return buildFormattedQueryParameterValueAsList(value);
+    }
+    return Uri.encodeQueryComponent(value.toString());
+  }
+
+  String buildFormattedQueryParameterValueAsList(List values) {
+    String formattedParameter = '[';
+    for( var value in values ) {
+      if(formattedParameter.length > 1) {
+        formattedParameter += ',';
+      }
+      if( value is String ) {
+        formattedParameter += '\"$value\"';
+      }
+      else {
+        formattedParameter += value.toString();
       }
     }
-    return Uri.parse(Uri.encodeFull(uri+queryParams));
+    return Uri.encodeQueryComponent(formattedParameter + ']');
   }
+
 
   TApi create<TApi extends IApi>(TApi api) {
     return api;
@@ -108,5 +147,8 @@ class Retrolite extends RetroliteParameters
   IApi _prepareApi(IApi api) {
     api.client = this;
   }
+
+
+
 
 }

@@ -6,7 +6,7 @@ bool isInvalid(Object obj) => !isValid(obj);
 
 Type typeof<T>() => T;
 
-@deprecated
-http.Client newLoggingClient([http.Client client]) =>
-  new http.Client();
+/// Returns an instance of the default http client.
+http.BaseClient newDefaultHttpClient() =>
+  http.Client();
 

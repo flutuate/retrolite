@@ -1,16 +1,14 @@
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:retrolite/retrolite.dart';
-import 'package:retrolite/src/IApi.dart';
+import 'package:retrolite/flutuate_http.dart';
 
 import 'Genre.dart';
 
 class TmdbApi
 extends IApi
 {
-  static final String _key = "";
-
   final String apiKey;
 
   final String language;
@@ -21,16 +19,16 @@ extends IApi
 
   @override
   Future<List<Genre>> genres()
-    => client
-        ..route = 'movie/upcoming'
-        ..contentType = ContentType.json
-        ..parameters = {
-          'apk_key': apiKey,
+    => client.get<List<Genre>>(
+        'movie/upcoming',
+        contentType: ContentType.json,
+        headers: {
+          'unuseless': HeaderValue('any', {'charset': utf8.name})
+        },
+        queryParameters: {
+          'api_key': apiKey,
           'language': language,
           'region': region,
           'page': 1
-        }
-        .get<List<Genre>>()
-    ;
-  }
+        } );
 }
