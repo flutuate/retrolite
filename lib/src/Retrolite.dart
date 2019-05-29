@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/io_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:retrolite/src/IApi.dart';
+import 'package:retrolite/src/IRestClient.dart';
 
 import 'Query.dart';
 import 'RetroliteParameters.dart';
@@ -10,8 +11,10 @@ import 'core.dart';
 
 class Retrolite extends RetroliteParameters
 {
-  Retrolite({String baseUrl, http.BaseClient client})
-    : super(baseUrl, client)
+  Map<Type, IApi> _apis = {};
+
+  Retrolite({String baseUrl, http.BaseClient httpClient})
+    : super(baseUrl, httpClient)
   {
     /*Logger.root.level = Level.ALL; // defaults to Level.INFO
     Logger.root.onRecord.listen((record) {
@@ -94,4 +97,16 @@ class Retrolite extends RetroliteParameters
   TApi create<TApi extends IApi>(TApi api) {
     return api;
   }
+
+  @override
+  TApi register<TApi extends IApi>(TApi api) {
+    api = _prepareApi(api);
+    _apis[api.runtimeType] = api;
+    return api;
+  }
+
+  IApi _prepareApi(IApi api) {
+    api.client = this;
+  }
+
 }

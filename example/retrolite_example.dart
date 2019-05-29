@@ -9,12 +9,11 @@ import 'tmdb/TmdbApi.dart';
 main() {
   Retrolite retrolite = Retrolite(
     baseUrl: 'https://api.themoviedb.org/3/',
-    client: newHttpClient(),
+    httpClient: newHttpClient(),
   );
 
-  //var api = new TmdbApi(retrolite);
-
-  var api = retrolite.create<TmdbApi>( new TmdbApi('1f54bd990f1cdfb230adb312546d765d') );
+  TmdbApi api = retrolite.register<TmdbApi>( new TmdbApi('1f54bd990f1cdfb230adb312546d765d') );
+  //TODO
 }
 
 /// Returns an instance of the default http client.

@@ -30,6 +30,7 @@ extends IApi
           'region': region,
           'page': 1
         }
-        ..get<List<Genre>>();
+        .get<List<Genre>>()
+    ;
   }
 }

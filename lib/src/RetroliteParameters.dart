@@ -1,11 +1,14 @@
 import 'package:http/http.dart' as http;
 
-class RetroliteParameters
+import 'IRestClient.dart';
+
+abstract class RetroliteParameters
+extends IRestClient
 {
   final String baseUrl;
 
-  final http.BaseClient client;
+  final http.BaseClient httpClient;
 
-  RetroliteParameters(this.baseUrl, this.client);
+  RetroliteParameters(this.baseUrl, this.httpClient);
 }
 
