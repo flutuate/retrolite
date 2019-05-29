@@ -99,24 +99,27 @@ class Retrolite extends RetroliteParameters
     String formattedParameters = '';
     for( String name in queryParameters.keys ) {
       final value = queryParameters[name];
-      final formattedValue = buildFormattedQueryParameterValue(value);
+      final formattedValue = formatQueryValue(value);
       final delimiter = formattedParameters.isEmpty ? '?' : '&';
       formattedParameters += '$delimiter$name=$formattedValue';
     }
     return formattedParameters;
   }
 
-  String buildFormattedQueryParameterValue(dynamic value) {
+  String formatQueryValue(dynamic value) {
     if( value == null ) {
       return '';
     }
-    if( value is List ) {
-      return buildFormattedQueryParameterValueAsList(value);
+    else if( value is List ) {
+      return formatQueryAsList(value);
+    }
+    else if( value is Map ) {
+      return formatQueryAsMap(value);
     }
     return Uri.encodeQueryComponent(value.toString());
   }
 
-  String buildFormattedQueryParameterValueAsList(List values) {
+  String formatQueryAsList(List values) {
     String formattedParameter = '[';
     for( var value in values ) {
       if(formattedParameter.length > 1) {
@@ -132,6 +135,16 @@ class Retrolite extends RetroliteParameters
     return Uri.encodeQueryComponent(formattedParameter + ']');
   }
 
+  String formatQueryAsMap(Map values) {
+    return Uri.encodeQueryComponent(json.encode(values));
+  }
+
+  String serializeKey(dynamic value) {
+    if( value is String ) {
+      return '\"$value\"';
+    }
+    return '${value.toString()}';
+  }
 
   TApi create<TApi extends IApi>(TApi api) {
     return api;
@@ -147,8 +160,5 @@ class Retrolite extends RetroliteParameters
   IApi _prepareApi(IApi api) {
     api.client = this;
   }
-
-
-
 
 }
