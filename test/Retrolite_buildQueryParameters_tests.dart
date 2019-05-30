@@ -4,49 +4,18 @@ import 'package:test/test.dart';
 void main() {
   group('Build methods of Retrolite tests', () {
 
+    var retrolite;
+
     setUp(() {
+      retrolite = Retrolite('http://localhost:8080');
     });
 
-    test('Test of building an url without a slash ("/") at the end', () {
-      final String baseUrl = 'http://localhost:8080';
-      var retrolite = Retrolite(baseUrl);
-      var url = retrolite.buildHost();
-      expect(url.toString(), equals(baseUrl+'/'));
+    test('buildQueryParameters with parameter null must returns empty string', () {
+      var parameters = retrolite.buildQueryParameters(null);
+      expect(parameters, isEmpty);
     });
 
-    test('Test of building an url containing a slash at the end', () {
-      final String baseUrl = 'http://localhost:8080/';
-      var retrolite = Retrolite(baseUrl);
-      var url = retrolite.buildHost();
-      expect(url.toString(), equals(baseUrl));
-    });
-
-    test('Test of building a url without a slash at the end +endpoint', () {
-      final String baseUrl = 'http://localhost:8080';
-      var retrolite = Retrolite(baseUrl);
-      var route = 'client/test';
-      var url = retrolite.buildUrl(route);
-      expect(url.toString(), equals(baseUrl+'/'+route));
-    });
-
-    test('Test of building a url containing a slash at the end +endpoint', () {
-      final String baseUrl = 'http://localhost:8080/';
-      var retrolite = Retrolite(baseUrl);
-      var route = 'client/test';
-      var url = retrolite.buildUrl(route);
-      expect(url.toString(), equals(baseUrl+route));
-    });
-
-    test('Test of building a url containing space chars', () {
-      final String baseUrl = '       http://localhost:8080               ';
-      var retrolite = Retrolite(baseUrl);
-      var route = 'client/test';
-      var url = retrolite.buildUrl(route);
-      expect(url.toString(), equals(baseUrl.trim()+'/'+route));
-    });
-
-    test('One primitive query parameter building test', () {
-      var retrolite = Retrolite('http://localhost:8080');
+    test('Test buildQueryParameters with one element', () {
       var queryParameters = {
         'id': 1234567
       };
@@ -54,8 +23,7 @@ void main() {
       expect(parameters, '?id=1234567');
     });
 
-    test('Testing the construction of a query parameter containing spaces in the name', () {
-      var retrolite = Retrolite('http://localhost:8080');
+    test('Parameter with spaces in the name will be trimmed', () {
       var queryParameters = {
         '          id           ': 1234567
       };
@@ -63,8 +31,7 @@ void main() {
       expect(parameters, '?id=1234567');
     });
 
-    test('Multiples primitive query parameters building test', () {
-      var retrolite = Retrolite('http://localhost:8080');
+    test('Test buildQueryParameters with latin characters in values', () {
       var queryParameters = {
         'id': 1234567,
         'name': 'João Smith'
@@ -73,8 +40,31 @@ void main() {
       expect(parameters, '?id=1234567&name=Jo%C3%A3o+Smith');
     });
 
-    test('Query parameters with string array building test', () {
-      var retrolite = Retrolite('http://localhost:8080');
+    test('Test buildQueryParameters with one string array only', () {
+      var queryParameters = {
+        'phones': ['+554733331234', '+14561234']
+      };
+      var parameters = retrolite.buildQueryParameters(queryParameters);
+      expect(parameters, '?phones=%5B%22%2B554733331234%22%2C%22%2B14561234%22%5D');
+    });
+
+    test('Test buildQueryParameters with one dynamic array', () {
+      var queryParameters = {
+        'values': ['+554733331234', 13579.02468, 54321]
+      };
+      var parameters = retrolite.buildQueryParameters(queryParameters);
+      expect(parameters, '?values=%5B%22%2B554733331234%22%2C13579.02468%2C54321%5D');
+    });
+
+    test('Test buildQueryParameters with one dynamic array', () {
+      var queryParameters = {
+        'values': ['John Smith', {'age':45} ]
+      };
+      var parameters = retrolite.buildQueryParameters(queryParameters);
+      expect(parameters, '?values=%5B%22John+Smith%22%2C%7B%22age%22%3A+45%7D%5D');
+    });
+
+    test('Test buildQueryParameters with string array', () {
       var queryParameters = {
         'id': 1234567,
         'name': 'João Smith',
@@ -85,32 +75,29 @@ void main() {
     });
 
     test('Query parameters with null value building test', () {
-      var retrolite = Retrolite('http://localhost:8080');
       var queryParameters = {
-        'valueNull': null,
+        'nullValue': null,
         'id': 1234567,
         'name': 'João Smith',
         'phones': ['+554733331234', '+14561234', ','],
       };
       var parameters = retrolite.buildQueryParameters(queryParameters);
-      expect(parameters, '?valueNull=&id=1234567&name=Jo%C3%A3o+Smith&phones=%5B%22%2B554733331234%22%2C%22%2B14561234%22%2C%22%2C%22%5D');
+      expect(parameters, '?nullValue=&id=1234567&name=Jo%C3%A3o+Smith&phones=%5B%22%2B554733331234%22%2C%22%2B14561234%22%2C%22%2C%22%5D');
     });
 
     test('Query parameters with double value building test', () {
-      var retrolite = Retrolite('http://localhost:8080');
       var queryParameters = {
         'double': 13579.23468,
-        'valueNull': null,
+        'nullValue': null,
         'id': 1234567,
         'name': 'João Smith',
         'phones': ['+554733331234', '+14561234', ','],
       };
       var parameters = retrolite.buildQueryParameters(queryParameters);
-      expect(parameters, '?double=13579.23468&valueNull=&id=1234567&name=Jo%C3%A3o+Smith&phones=%5B%22%2B554733331234%22%2C%22%2B14561234%22%2C%22%2C%22%5D');
+      expect(parameters, '?double=13579.23468&nullValue=&id=1234567&name=Jo%C3%A3o+Smith&phones=%5B%22%2B554733331234%22%2C%22%2B14561234%22%2C%22%2C%22%5D');
     });
 
     test('Query parameters with empty value building test', () {
-      var retrolite = Retrolite('http://localhost:8080');
       var queryParameters = {
         'emptyValue': '',
         'double': 13579.23468,
@@ -124,7 +111,6 @@ void main() {
     });
 
     test('Test of building a query parameter containing a map as value', () {
-      var retrolite = Retrolite('http://localhost:8080');
       var queryParameters = {
         'city': {
           'name': 'Londrina',

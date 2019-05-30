@@ -95,13 +95,44 @@ class Retrolite extends RetroliteParameters
 
   String buildHost() => baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
 
+  /// Build and returns a url encoded string containing the parameters specified
+  /// in [queryParameters].
+  ///
+  /// **[List] parameters** are converted to following encoded format:
+  /// ```html
+  /// name-parameter=[value0,value1,..,valueN]
+  /// ```
+  ///
+  /// Using the example:
+  /// ```dart
+  ///   Map<String, dynamic> queryParameters = {
+  ///      'values': ['+554733331234', 13579.02468, 54321]
+  ///    };
+  /// ```
+  /// the result will be:
+  /// ```html
+  /// '?values=%5B%22%2B554733331234%22%2C13579.02468%2C54321%5D'
+  /// ```
+  ///
+  /// **[Map] parameters** are converted to following encoded format:
+  /// ```html
+  /// name-parameter={{key0:value0},{key1:value1},..,{keyN:valueN}}
+  /// ```
+  ///
+  /// Using the example:
+  /// ```dart
+  ///   Map<String, dynamic> queryParameters = {
+  ///      'values': ['John Smith', {'age':45} ]
+  ///   };
+  /// ```
   String buildQueryParameters(Map<String, dynamic> queryParameters) {
+    queryParameters ??= {};
     String formattedParameters = '';
     for( String name in queryParameters.keys ) {
       final value = queryParameters[name];
       final formattedValue = formatQueryValue(value);
       final delimiter = formattedParameters.isEmpty ? '?' : '&';
-      formattedParameters += '$delimiter$name=$formattedValue';
+      formattedParameters += '$delimiter${name.trim()}=$formattedValue';
     }
     return formattedParameters;
   }
