@@ -95,7 +95,7 @@ class Retrolite extends RetroliteParameters
 
   String buildHost() => baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
 
-  /// Build and returns a url encoded string containing the parameters specified
+  /// Build and returns an url encoded string containing the parameters specified
   /// in [queryParameters].
   ///
   /// **[List] parameters** are converted to following encoded format:
@@ -158,6 +158,9 @@ class Retrolite extends RetroliteParameters
       }
       if( value is String ) {
         formattedParameter += '\"$value\"';
+      }
+      else if(value is Map) {
+        formattedParameter += formatQueryAsMap(value);
       }
       else {
         formattedParameter += value.toString();
