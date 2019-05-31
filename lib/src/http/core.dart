@@ -1,8 +1,11 @@
 import 'package:http/http.dart' as http;
 
-bool isValid(Object obj) => obj != null;
+bool isNull(Object obj) => obj == null;
 
-bool isInvalid(Object obj) => !isValid(obj);
+bool isNotNull(Object obj) => !isNull(obj);
+
+bool isNullOrEmpty(dynamic obj) =>
+  obj == null || ((obj is String || obj is List || obj is Map) && obj.isEmpty);
 
 Type typeof<T>() => T;
 

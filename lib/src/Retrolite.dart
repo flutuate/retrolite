@@ -125,52 +125,70 @@ class Retrolite extends RetroliteParameters
   ///      'values': ['John Smith', {'age':45} ]
   ///   };
   /// ```
+  /// the result will be:
+  /// ```html
+  /// TODO
+  /// ```
   String buildQueryParameters(Map<String, dynamic> queryParameters) {
     queryParameters ??= {};
     String formattedParameters = '';
     for( String name in queryParameters.keys ) {
       final value = queryParameters[name];
-      final formattedValue = formatQueryValue(value);
+      final formattedValue = encodeQueryValue(value);
       final delimiter = formattedParameters.isEmpty ? '?' : '&';
       formattedParameters += '$delimiter${name.trim()}=$formattedValue';
     }
     return formattedParameters;
   }
 
-  String formatQueryValue(dynamic value) {
+  String encodeQueryValue(dynamic value) {
+    String formattedValue;
     if( value == null ) {
-      return '';
+      formattedValue = '';
     }
     else if( value is List ) {
-      return formatQueryAsList(value);
+      formattedValue = formatQueryValueAsList(value);
     }
     else if( value is Map ) {
-      return formatQueryAsMap(value);
+      formattedValue = formatQueryValueAsMap(value);
     }
-    return Uri.encodeQueryComponent(value.toString());
+    else {
+      formattedValue = value.toString();
+    }
+    return Uri.encodeQueryComponent(formattedValue);
   }
 
-  String formatQueryAsList(List values) {
-    String formattedParameter = '[';
+  String formatQueryValueAsList(List values) {
+    if( values == null ) {
+      return '';
+    }
+    String formattedValue = '[';
     for( var value in values ) {
-      if(formattedParameter.length > 1) {
-        formattedParameter += ',';
+      if(formattedValue.length > 1) {
+        formattedValue += ',';
       }
-      if( value is String ) {
-        formattedParameter += '\"$value\"';
+
+      if( value == null ) {
+        formattedValue += '';
+      }
+      else if( value is String ) {
+        formattedValue += '\"$value\"';
+      }
+      else if(value is List) {
+        formattedValue += formatQueryValueAsList(value);
       }
       else if(value is Map) {
-        formattedParameter += formatQueryAsMap(value);
+        formattedValue += formatQueryValueAsMap(value);
       }
       else {
-        formattedParameter += value.toString();
+        formattedValue += value.toString();
       }
     }
-    return Uri.encodeQueryComponent(formattedParameter + ']');
+    return formattedValue + ']';
   }
 
-  String formatQueryAsMap(Map values) {
-    return Uri.encodeQueryComponent(json.encode(values));
+  String formatQueryValueAsMap(Map values) {
+    return json.encode(values);
   }
 
   String serializeKey(dynamic value) {
