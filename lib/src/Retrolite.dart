@@ -169,7 +169,7 @@ class Retrolite extends RetroliteParameters
       }
 
       if( value == null ) {
-        formattedValue += '';
+        formattedValue += 'null';
       }
       else if( value is String ) {
         formattedValue += '\"$value\"';
@@ -188,6 +188,9 @@ class Retrolite extends RetroliteParameters
   }
 
   String formatQueryValueAsMap(Map values) {
+    if(values == null) {
+      return '';
+    }
     return json.encode(values);
   }
 

@@ -35,13 +35,13 @@ void main() {
     test('Map containing some primitive arguments', () {
       var queryParameters = {'name':'Smith', 'age': 45, 'height': 1.80 };
       var formattedValue = retrolite.formatQueryValueAsMap(queryParameters);
-      expect(formattedValue, 'null');
+      expect(formattedValue, '{"name":"Smith","age":45,"height":1.8}');
     });
 
     test('Map containing some arguments with special chars', () {
       var queryParameters = {'name':'João Smith', 'age':45, 'height': 1.80, 'specialChars': '%\\/@#:\'\"' };
       var formattedValue = retrolite.formatQueryValueAsMap(queryParameters);
-      expect(formattedValue, 'null');
+      expect(formattedValue, '{"name":"João Smith","age":45,"height":1.8,"specialChars":"%\\\\/@#:\'\\""}');
     });
 
     test('Map containing a null argument', () {
@@ -95,7 +95,7 @@ void main() {
         }
       };
       var formattedValue = retrolite.formatQueryValueAsMap(queryParameters);
-      expect(formattedValue, '["City",{"name":"Londrina","latitude":-23.31028,"longitude":-51.16278}]');
+      expect(formattedValue, '{"City":{"name":"Londrina","latitude":-23.31028,"longitude":-51.16278}}');
     });
 
   });
