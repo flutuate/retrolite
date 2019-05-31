@@ -64,6 +64,7 @@ void main() {
       expect(parameters, '?values=%5B%22John+Smith%22%2C%7B%22age%22%3A45%7D%5D');
     });
 
+
     test('Test buildQueryParameters with string array', () {
       var queryParameters = {
         'id': 1234567,

@@ -16,3 +16,6 @@ doc/api/
 *.iws
 .idea/
 .idea/**
+
+example/resources/secrets.json
+test/resources/secrets.json
