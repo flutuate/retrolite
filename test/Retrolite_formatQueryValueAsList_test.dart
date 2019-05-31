@@ -6,14 +6,13 @@ void main() {
 
     Retrolite retrolite;
 
-    setUp(() {
+    setUpAll(() {
       retrolite = Retrolite('http://localhost:8080');
     });
 
     test('Passing parameter empty', () {
       var formattedValue = retrolite.formatQueryValueAsList([]);
       expect(formattedValue, '[]');
-      //expect(formattedValue, '%5B%5D');
     });
 
     test('Passing parameter null', () {
@@ -25,34 +24,30 @@ void main() {
       var queryParameters = ['Smith'];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
       expect(formattedValue, '["Smith"]');
-      //expect(formattedValue, '%5B%22Smith%22%5D');
     });
 
     test('Passing list with one argument string with latin characters', () {
       var queryParameters = ['João Smith'];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
       expect(formattedValue, '["João Smith"]');
-      //expect(formattedValue, '%5B%22Jo%C3%A3o+Smith%22%5D');
     });
 
     test('Passing list with some primitive arguments', () {
       var queryParameters = ['Smith', 1234, 13579.02468];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
       expect(formattedValue, '["Smith",1234,13579.02468]');
-      //expect(formattedValue, '%5B%22Smith%22%2C1234%2C13579.02468%5D');
     });
 
     test('List with some arguments with special chars', () {
       var queryParameters = ['Smith', 1234, 13579.02468, ',', '%\\/@#:\'\"'];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
-      expect(formattedValue, '["Smith",1234,13579.02468,",","%"]');
-      //expect(formattedValue, '%5B%22Smith%22%2C1234%2C13579.02468%2C%22%2C%22%2C%22%25%22%5D' );
+      expect(formattedValue, '["Smith",1234,13579.02468,",","%\\/@#:\'""]');
     });
 
     test('Passing list with a null argument', () {
       var queryParameters = [null];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
-      expect(formattedValue, '[]');
+      expect(formattedValue, '[null]');
     });
 
     test('Passing list with a empty map argument', () {

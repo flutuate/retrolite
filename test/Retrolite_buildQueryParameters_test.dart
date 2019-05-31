@@ -6,7 +6,7 @@ void main() {
 
     var retrolite;
 
-    setUp(() {
+    setUpAll(() {
       retrolite = Retrolite('http://localhost:8080');
     });
 
@@ -61,7 +61,7 @@ void main() {
         'values': ['John Smith', {'age':45} ]
       };
       var parameters = retrolite.buildQueryParameters(queryParameters);
-      expect(parameters, '?values=%5B%22John+Smith%22%2C%7B%22age%22%3A+45%7D%5D');
+      expect(parameters, '?values=%5B%22John+Smith%22%2C%7B%22age%22%3A45%7D%5D');
     });
 
     test('Test buildQueryParameters with string array', () {
