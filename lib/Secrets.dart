@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
+
 ///
 /// A convenience class to read secrets tokens from a resource file.
 ///
@@ -22,27 +24,12 @@ import 'dart:io';
 ///    }
 /// ]
 /// ```
-/// 
 class Secrets
+extends DelegatingMap
 {
-  final Map<String,String> _tokens = {};
+  Secrets(Map base) : super(base);
 
-  factory Secrets._fromJson(Map<String, String> jsonMap) {
-    return new Secrets(mixpanelToken: jsonMap['mixpanel_token']);
-  }
-
-  /// Load the json resource file that contains the secret tokens.
-  /// The method returns an instance of [Secrets].
-  ///
-  /// Set [inUnitTest] as ```true``` to load the token from an external file.
-  /// See [loadFromFile].
-  static Future<Secrets> load({bool inUnitTest = false}) {
-    if (inUnitTest) {
-      return loadFromFile();
-    }
-  }
-
-  /// Load the token from an external file. First, the method will search the file
+  /// Load the secrets tokens from an external file. First, the method will search the file
   /// at path '<project-folder>/test/resources/secrets.json', if not found, it
   /// will search at '<project-folder>/resources/secrets.json'.
   static Future<Secrets> loadFromFile() {
@@ -51,7 +38,15 @@ class Secrets
       file = new File('resources/secrets.json');
     }
     final String content = file.readAsStringSync();
-    final Map map = json.decode(content);
-    return Future<Secrets>.value(Secrets._fromJson(map));
+    var list = json.decode(content);
+
+    final Map<String,String> tokens = {};
+    for( Map element in list ) {
+      var key = element.keys.first;
+      var value = element.values.first;
+      tokens[key] = value;
+    }
+    return Future<Secrets>.value( new Secrets(tokens) );
   }
 }
+

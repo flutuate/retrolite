@@ -2,18 +2,21 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
+import 'package:retrolite/Secrets.dart';
 import 'package:retrolite/flutuate_http.dart';
 import 'package:retrolite/retrolite.dart';
 
 import 'tmdb/TmdbApi.dart';
 
-main() {
+main() async {
   Retrolite retrolite = Retrolite(
     'https://api.themoviedb.org/3/',
     httpClient: newHttpClient(),
   );
 
-  TmdbApi api = retrolite.register<TmdbApi>( new TmdbApi() );
+  Secrets secrets = await Secrets.loadFromFile();
+
+  TmdbApi api = retrolite.register<TmdbApi>( new TmdbApi(secrets['tmdb_token']) );
   //TODO
 }
 
