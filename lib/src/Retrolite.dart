@@ -69,14 +69,14 @@ class Retrolite extends RetroliteParameters
   Future<TReturn> get<TReturn>(String route,
       {Map<String, HeaderValue> headers,
         ContentType contentType,
-        Map<String, dynamic> formDataParameters,
-        Map<String, dynamic> queryParameters}) async
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> formDataParameters} ) async
   {
-    /*http.Response response = await httpClient.get(
+    http.Response response = await httpClient.get(
         buildUrl(route, queryParameters),
-        headers: _buildHeaders(headers)
+        headers: buildHeaders(headers)
     );
-    request.headers.contentType = contentType;
+    /*request.headers.contentType = contentType;
     HttpClientResponse response = await request.close();
     String content = await response.transform(utf8.decoder).join();
     TReturn.runtimeType is String;
@@ -219,12 +219,17 @@ class Retrolite extends RetroliteParameters
     return json.encode(values);
   }
 
-  String serializeKey(dynamic value) {
-    if( value is String ) {
-      return '\"$value\"';
-    }
-    return '${value.toString()}';
+  Map<String,String> buildHeaders(Map<String, HeaderValue> headers) {
+    Map<String,String> buildedHeaders = {};
+    return buildedHeaders;
   }
+
+//  String serializeKey(dynamic value) {
+//    if( value is String ) {
+//      return '\"$value\"';
+//    }
+//    return '${value.toString()}';
+//  }
 
   TApi create<TApi extends IApi>(TApi api) {
     //TODO
@@ -240,6 +245,8 @@ class Retrolite extends RetroliteParameters
 
   IApi _prepareApi(IApi api) {
     api.client = this;
+    return api;
   }
+
 
 }

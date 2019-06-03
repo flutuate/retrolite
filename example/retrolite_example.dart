@@ -17,7 +17,10 @@ main() async {
   Secrets secrets = await Secrets.loadFromFile();
 
   TmdbApi api = retrolite.register<TmdbApi>( new TmdbApi(secrets['tmdb_token']) );
-  //TODO
+
+  await api.genres().then((genres) {
+    print(genres);
+  });
 }
 
 /// Returns an instance of the default http client.
