@@ -82,6 +82,11 @@ class Retrolite extends RetroliteParameters
       if (typeof<TReturn>() == String) {
         return Future<TReturn>.value(response.body as TReturn);
       }
+      else if( isList(TReturn) ) {
+        List list = json.decode(response.body);
+        return Future<TReturn>.value(list as TReturn);
+        //TODO
+      }
       return Future<TReturn>.value(null);//TODO Map mapJson = jsonDecode(response.body);
     }
     catch (e) {
@@ -95,6 +100,10 @@ class Retrolite extends RetroliteParameters
     //if (typeof<TReturn>() == String) {
       //return Future<TReturn>.value(content as TReturn);
     //}
+  }
+
+  bool isList(Type type) {
+    return type.toString().split(r'\\b').first == 'List';
   }
 
   /// Parses a complete [Uri] using [baseUrl]+[route]+[queryParameters], already encoded.
@@ -361,7 +370,5 @@ class Retrolite extends RetroliteParameters
     api.client = this;
     return api;
   }
-
-
 
 }
