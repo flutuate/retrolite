@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
@@ -17,22 +16,11 @@ extends IApi
 
   TmdbApi(this.apiKey, {this.language='en-US', this.region='US'});
 
-  @override
-  Future<List<Genre>> genres()
+  /// Get the list of official genres for movies.
+  Future<List<Genre>> genresForMovies()
     => client.get<List<Genre>>(
-        'movie/upcoming',
+        'genre/movie/list',
         contentType: ContentType.json,
-        headers: [
-          //'unuseless': HeaderValue('any', {'charset': utf8.name})
-          Headers.custom(
-              'unuseless',
-              value:'any',
-              parameters: [
-                {'charset': utf8.name},
-                'text/html'
-              ]
-          )
-        ],
         queryParameters: {
           'api_key': apiKey,
           'language': language,

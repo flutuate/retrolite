@@ -18,7 +18,7 @@ main() async {
 
   TmdbApi api = retrolite.register<TmdbApi>( new TmdbApi(secrets['tmdb_token']) );
 
-  await api.genres().then((genres) {
+  await api.genresForMovies().then((genres) {
     print(genres);
   });
 }

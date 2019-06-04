@@ -72,18 +72,29 @@ class Retrolite extends RetroliteParameters
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> formDataParameters} ) async
   {
-    http.Response response = await httpClient.get(
-        buildUrl(route, queryParameters),
-        headers: buildHeaders(headers)
-    );
-    /*request.headers.contentType = contentType;
-    HttpClientResponse response = await request.close();
-    String content = await response.transform(utf8.decoder).join();
-    TReturn.runtimeType is String;
-    if (typeof<TReturn>() == String) {
-      return Future<TReturn>.value(content as TReturn);
-    }*/
-    return null;
+    http.Response response;
+    try {
+      response = await httpClient.get(
+          buildUrl(route, queryParameters),
+          headers: parseHeaders(headers)
+      );
+
+      if (typeof<TReturn>() == String) {
+        return Future<TReturn>.value(response.body as TReturn);
+      }
+      return Future<TReturn>.value(null);//TODO Map mapJson = jsonDecode(response.body);
+    }
+    catch (e) {
+      // TODO
+      return Future<TReturn>.value(null);//TODO
+    }
+    finally {
+      httpClient.close();
+    }
+
+    //if (typeof<TReturn>() == String) {
+      //return Future<TReturn>.value(content as TReturn);
+    //}
   }
 
   /// Parses a complete [Uri] using [baseUrl]+[route]+[queryParameters], already encoded.
@@ -219,22 +230,37 @@ class Retrolite extends RetroliteParameters
     return json.encode(values);
   }
 
-  Map<String,String> buildHeaders(List<Header> headers) {
+  /// Parses a [Header] list to a [Map]<String,String> and returns it.
+  ///
+  /// The method throws an [ArgumentError] if any element of [headers] is ```null```.
+  Map<String,String> parseHeaders(List<Header> headers) {
     Map<String,String> buildedHeaders = {};
     headers ??= [];
     for( Header header in headers ) {
-      MapEntry<String,String> entry = buildMapEntryHeader(header);
+      MapEntry<String,String> entry = parseMapEntryHeader(header);
+      buildedHeaders.addEntries( [ entry ] );
     }
     return buildedHeaders;
   }
 
-  MapEntry<String, String> buildMapEntryHeader(Header header) {
+  /// Parses a [Header] to a [MapEntry]<String,String>.
+  ///
+  /// Elements in [Header.parameters] must not be null or an [ArgumentError]
+  /// will be throwed.
+  /// Primitives elements will be parsed with ```toString()```.
+  /// [Map] elements, will be parsed with method [parseMapHeaderParameter],
+  /// and [List] elements with [parseListHeaderParameter].
+  MapEntry<String, String> parseMapEntryHeader(Header header) {
+    if( header == null ) {
+      throw ArgumentError('Header parameter cannot be null');
+    }
     String value = '${header.value.toString()}';
     if( header.parameters.isNotEmpty ) {
       value += ';';
     }
+    int parametersCount = 0;
     for( var parameter in header.parameters ) {
-      if( value.isNotEmpty ) {
+      if( ++parametersCount > 1 ) {
         value += ',';
       }
       if(parameter is Map) {
@@ -250,8 +276,12 @@ class Retrolite extends RetroliteParameters
     return new MapEntry<String,String>(header.name, value);
   }
 
-  /// Tests ok TODO doc
+  /// Parses a [List] header ([Header]) parameter to [String].
+  ///
+  /// [Map] elements will be parsed with [parseMapHeaderParameter] and
+  /// [List] elements with this method.
   String parseListHeaderParameter(List listParameter) {
+    listParameter ??= [];
     String parsedParameter = '';
     for( var element in listParameter ) {
       if( parsedParameter.isNotEmpty ) {
@@ -270,7 +300,10 @@ class Retrolite extends RetroliteParameters
     return parsedParameter;
   }
 
-  /// Tests ok TODO doc
+  /// Parses a [Map] header ([Header]) parameter to [String].
+  ///
+  /// [Map] elements will be parsed with this method and
+  /// [List] elements with [parseListHeaderParameter].
   String parseMapHeaderParameter(Map mapParameter) {
     String parsedParameter = '';
     for( var entry in mapParameter.entries ) {
