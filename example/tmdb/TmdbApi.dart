@@ -22,9 +22,17 @@ extends IApi
     => client.get<List<Genre>>(
         'movie/upcoming',
         contentType: ContentType.json,
-        headers: {
-          'unuseless': HeaderValue('any', {'charset': utf8.name})
-        },
+        headers: [
+          //'unuseless': HeaderValue('any', {'charset': utf8.name})
+          Headers.custom(
+              'unuseless',
+              value:'any',
+              parameters: [
+                {'charset': utf8.name},
+                'text/html'
+              ]
+          )
+        ],
         queryParameters: {
           'api_key': apiKey,
           'language': language,
@@ -32,3 +40,4 @@ extends IApi
           'page': 1
         } );
 }
+

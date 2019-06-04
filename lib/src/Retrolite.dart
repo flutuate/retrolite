@@ -21,7 +21,7 @@ class Retrolite extends RetroliteParameters
 
   @override
   Future<TReturn> post<TReturn>(String route,
-      {Map<String, HeaderValue> headers,
+      {List<Header> headers,
         ContentType contentType,
         Map<String, dynamic> formDataParameters,
         Map<String, dynamic> queryParameters,
@@ -67,7 +67,7 @@ class Retrolite extends RetroliteParameters
 
   @override
   Future<TReturn> get<TReturn>(String route,
-      {Map<String, HeaderValue> headers,
+      {List<Header> headers,
         ContentType contentType,
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> formDataParameters} ) async
@@ -219,10 +219,91 @@ class Retrolite extends RetroliteParameters
     return json.encode(values);
   }
 
-  Map<String,String> buildHeaders(Map<String, HeaderValue> headers) {
+  Map<String,String> buildHeaders(List<Header> headers) {
     Map<String,String> buildedHeaders = {};
+    headers ??= [];
+    for( Header header in headers ) {
+      MapEntry<String,String> entry = buildMapEntryHeader(header);
+    }
     return buildedHeaders;
   }
+
+  MapEntry<String, String> buildMapEntryHeader(Header header) {
+    String value = '${header.value.toString()}';
+    if( header.parameters.isNotEmpty ) {
+      value += ';';
+    }
+    for( var parameter in header.parameters ) {
+      if( value.isNotEmpty ) {
+        value += ',';
+      }
+      if(parameter is Map) {
+        value += parseMapHeaderParameter(parameter);
+      }
+      else if(parameter is List) {
+        value += parseListHeaderParameter(parameter);
+      }
+      else  {
+        value += parameter.toString();
+      }
+    }
+    return new MapEntry<String,String>(header.name, value);
+  }
+
+  /// Tests ok TODO doc
+  String parseListHeaderParameter(List listParameter) {
+    String parsedParameter = '';
+    for( var element in listParameter ) {
+      if( parsedParameter.isNotEmpty ) {
+        parsedParameter += ',';
+      }
+      if( element is Map ) {
+        parsedParameter += parseMapHeaderParameter(element);
+      }
+      else if( element is List ) {
+        parsedParameter += parseListHeaderParameter(element);
+      }
+      else {
+        parsedParameter += element.toString();
+      }
+    }
+    return parsedParameter;
+  }
+
+  /// Tests ok TODO doc
+  String parseMapHeaderParameter(Map mapParameter) {
+    String parsedParameter = '';
+    for( var entry in mapParameter.entries ) {
+      if( parsedParameter.isNotEmpty ) {
+        parsedParameter += ',';
+      }
+      parsedParameter += '${entry.key}=';
+      if( entry.value is Map ) {
+        parsedParameter += parseMapHeaderParameter(entry.value);
+      }
+      else if( entry.value is List ) {
+        parsedParameter += parseListHeaderParameter(entry.value);
+      }
+      else {
+        parsedParameter += entry.value.toString();
+      }
+    }
+    return parsedParameter;
+  }
+
+  /*
+* To build an [:accepts:] header with the value
+*
+*     text/plain; q=0.3, text/html
+*
+* use code like this:
+*
+*     HttpClientRequest request = ...;
+*     var v = new HeaderValue("text/plain", {"q": "0.3"});
+*     request.headers.add(HttpHeaders.acceptHeader, v);
+*     request.headers.add(HttpHeaders.acceptHeader, "text/html");
+* */
+
 
 //  String serializeKey(dynamic value) {
 //    if( value is String ) {
@@ -247,6 +328,7 @@ class Retrolite extends RetroliteParameters
     api.client = this;
     return api;
   }
+
 
 
 }
