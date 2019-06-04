@@ -79,11 +79,12 @@ class Retrolite extends RetroliteParameters
           headers: parseHeaders(headers)
       );
 
-      if (typeof<TReturn>() == String) {
+      if( isString(TReturn) ) {
         return Future<TReturn>.value(response.body as TReturn);
       }
       else if( isList(TReturn) ) {
-        List list = json.decode(response.body);
+        String body = response.body;
+        List list = json.decode(body);
         return Future<TReturn>.value(list as TReturn);
         //TODO
       }
@@ -102,9 +103,14 @@ class Retrolite extends RetroliteParameters
     //}
   }
 
-  bool isList(Type type) {
-    return type.toString().split(r'\\b').first == 'List';
-  }
+  bool isType(Type type, String typename) =>
+    type.toString().split(RegExp(r'\b')).first == typename;
+
+  bool isString(Type type) => isType(type, 'String');
+
+  bool isList(Type type) => isType(type, 'List');
+
+  bool isMap(Type type) => isType(type, 'Map');
 
   /// Parses a complete [Uri] using [baseUrl]+[route]+[queryParameters], already encoded.
   Uri buildUrl(String route, [Map<String, dynamic> queryParameters]) {
