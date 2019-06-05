@@ -33,7 +33,7 @@ void main()
           httpClient: newUnsafeHttpClient()
       );
 
-      tmdbApi = retroliteTmdbApi.register<TmdbApi>( new TmdbApi('<use-your-token>') );
+      tmdbApi = retroliteTmdbApi.register<TmdbApi>( new TmdbApi('1f54bd990f1cdfb230adb312546d765d') );
 
     });
 

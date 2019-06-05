@@ -70,7 +70,8 @@ class Retrolite extends RetroliteParameters
       {List<Header> headers,
         ContentType contentType,
         Map<String, dynamic> queryParameters,
-        Map<String, dynamic> formDataParameters} ) async
+        Map<String, dynamic> formDataParameters,
+        ParserFunction<TReturn> parser} ) async
   {
     http.Response response;
     try {
@@ -82,13 +83,13 @@ class Retrolite extends RetroliteParameters
       if( isString(TReturn) ) {
         return Future<TReturn>.value(response.body as TReturn);
       }
-      else if( isList(TReturn) ) {
+      else {
         String body = response.body;
-        List list = json.decode(body);
-        return Future<TReturn>.value(list as TReturn);
+        Map<String, dynamic> mapJson = json.decode(body);
+        TReturn obj = parser(mapJson);
+        return Future<TReturn>.value(obj);
         //TODO
       }
-      return Future<TReturn>.value(null);//TODO Map mapJson = jsonDecode(response.body);
     }
     catch (e) {
       // TODO

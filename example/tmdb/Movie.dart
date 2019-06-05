@@ -1,18 +1,18 @@
-class Genre
+class Movie
 {
   final int id;
-  final String name;
+  final String title;
 
-  Genre(this.id, this.name);
+  Movie(this.id, this.title);
 
-  Genre.fromJson(Map<String, dynamic> json)
+  Movie.fromJson(Map<String, dynamic> json)
       : id = json['id']
-      , name = json['name'];
+      , title = json['title'];
 
   Map<String, dynamic> toJson() =>
       {
         'id': id,
-        'name': name,
+        'name': title,
       };
 }
 
@@ -41,11 +41,11 @@ class Genres
   void operator []=(int index, value) => _genres[index] = value;
 }*/
 
-List<Genre> genresFromJson(Map<String,dynamic> json) {
-  List<Genre> genres = [];
-  List jsonGenres = json['genres'];
-  for( var jsonGenre in jsonGenres ) {
-    genres.add( new Genre.fromJson(jsonGenre) );
+List<Movie> moviesFromJson(Map<String,dynamic> json) {
+  List<Movie> movies = [];
+  List jsonMovies = json['results'];
+  for( var jsonMovie in jsonMovies ) {
+    movies.add( new Movie.fromJson(jsonMovie) );
   }
-  return genres;
+  return movies;
 }

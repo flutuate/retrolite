@@ -20,6 +20,7 @@ extends IApi
   Future<List<Genre>> genresForMovies()
     => client.get<List<Genre>>(
         'genre/movie/list',
+        parser: genresFromJson,
         contentType: ContentType.json,
         queryParameters: {
           'api_key': apiKey,
@@ -27,5 +28,18 @@ extends IApi
           'region': region,
           'page': 1
         } );
+
+  /// Get a list of upcoming movies in theatres.
+  Future<List<Movie>> upcomingMovies()
+  => client.get<List<Genre>>(
+      '/movie/upcoming',
+      parser: genresFromJson,
+      contentType: ContentType.json,
+      queryParameters: {
+        'api_key': apiKey,
+        'language': language,
+        'region': region,
+        'page': 1
+      } );
 }
 
