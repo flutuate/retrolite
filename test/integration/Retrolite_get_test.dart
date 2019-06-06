@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:io';
 import 'package:retrolite/retrolite.dart';
 import 'package:retrolite/src/http/Response.dart';
 import 'package:test/test.dart';
@@ -8,40 +7,24 @@ import '../../example/retrolite_example.dart';
 import '../../example/tmdb/MovieGenres.dart';
 import '../../example/tmdb/TmdbApi.dart';
 
-import 'package:retrolite/flutuate_http.dart';
-
 void main()
 {
   group('Retrolite.get integration tests', () {
 
-    Retrolite retroliteSimpleApi, retroliteTmdbApi;
-    SimpleApi simpleApi;
+    Retrolite retroliteTmdbApi;
     TmdbApi tmdbApi;
 
     setUpAll(() {
-
-      retroliteSimpleApi = Retrolite(
-        //'https://api.themoviedb.org/3/',
-        //httpClient: newHttpClient(), //newUnsafeHttpClient()
-        'https://173.247.238.167:3001',
-        httpClient: newUnsafeHttpClient()
-      );
-
-      simpleApi = retroliteSimpleApi.register<SimpleApi>( new SimpleApi() );
 
       retroliteTmdbApi = Retrolite(
           'https://api.themoviedb.org/3/',
           httpClient: newUnsafeHttpClient()
       );
 
-      tmdbApi = retroliteTmdbApi.register<TmdbApi>( new TmdbApi('1f54bd990f1cdfb230adb312546d765d') );
-
+      tmdbApi = retroliteTmdbApi.register<TmdbApi>(
+        new TmdbApi('1f54bd990f1cdfb230adb312546d765d')
+      );
     });
-
-//    test('Get token from SimpleApi', () async {
-//      String token = await simpleApi.getToken();
-//      expect(token, isNotEmpty);
-//    });
 
     test('Get movie genres from TmdbApi', () async {
       Response<MovieGenres> genres = await tmdbApi.genresForMovies();
@@ -50,10 +33,3 @@ void main()
 
   });
 }
-
-class SimpleApi extends IApi
-{
-  Future<Response<String>> getToken()
-    => client.get<String>( '/', contentType: ContentType.text, );
-}
-

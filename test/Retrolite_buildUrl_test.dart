@@ -8,7 +8,7 @@ void main() {
       final String baseUrl = 'http://localhost:8080';
       var retrolite = Retrolite(baseUrl);
       var route = 'client/test';
-      var url = retrolite.buildUrl(route);
+      var url = retrolite.parseUrl(route);
       expect(url.toString(), '$baseUrl/$route');
     });
 
@@ -16,7 +16,7 @@ void main() {
       final String baseUrl = 'http://localhost:8080/';
       var retrolite = Retrolite(baseUrl);
       var route = 'client/test';
-      var url = retrolite.buildUrl(route);
+      var url = retrolite.parseUrl(route);
       expect(url.toString(), '$baseUrl$route');
     });
 
@@ -24,21 +24,21 @@ void main() {
       final String baseUrl = '       http://localhost:8080               ';
       var retrolite = Retrolite(baseUrl);
       var route = 'client/test';
-      var url = retrolite.buildUrl(route);
+      var url = retrolite.parseUrl(route);
       expect(url.toString(), '${baseUrl.trim()}/$route');
     });
 
     test('Build an url with null route throws argument error', () {
       final String baseUrl = 'http://localhost:8080';
       var retrolite = Retrolite(baseUrl);
-      expect( () => retrolite.buildUrl(null), throwsArgumentError );
+      expect( () => retrolite.parseUrl(null), throwsArgumentError );
     });
 
     test('Build an url with empty route', () {
       final String baseUrl = 'http://localhost:8080';
       var retrolite = Retrolite(baseUrl);
       var route = '';
-      var url = retrolite.buildUrl(route);
+      var url = retrolite.parseUrl(route);
       expect(url.toString(), '$baseUrl/$route');
     });
 
@@ -46,7 +46,7 @@ void main() {
       final String baseUrl = 'http://localhost:8080';
       var retrolite = Retrolite(baseUrl);
       var route = '/test';
-      var url = retrolite.buildUrl(
+      var url = retrolite.parseUrl(
           route,
           {'id':123, 'name':'João Smith', 'height': 1.81}
       );
@@ -57,7 +57,7 @@ void main() {
       final String baseUrl = 'http://localhost:8080';
       var retrolite = Retrolite(baseUrl);
       var route = '/test';
-      var url = retrolite.buildUrl(
+      var url = retrolite.parseUrl(
           route,
           {'id':123, 'name':'João Smith', 'height': 1.81, 'list': ['abc', 123, 456.789]}
       );
@@ -68,7 +68,7 @@ void main() {
       final String baseUrl = 'http://localhost:8080';
       var retrolite = Retrolite(baseUrl);
       var route = '/test';
-      var url = retrolite.buildUrl(
+      var url = retrolite.parseUrl(
           route,
           {'id':123, 'name':'João Smith', 'height': 1.81, 'list': ['abc', 123, 456.789], 'map':{'v1':1,'v2':'x','v3':5.67}}
       );
