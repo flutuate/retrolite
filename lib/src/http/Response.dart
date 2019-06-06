@@ -1,12 +1,12 @@
 import 'package:http/http.dart' as http;
 
-abstract class Response<T>
+class Response<T>
   extends DelegatingHttpResponse
 {
-  Response(http.Response response) :
-    super(response);
+  final T value;
 
-  T get value;
+  Response(http.Response response, this.value) :
+    super(response);
 }
 
 class DelegatingHttpResponse {
@@ -38,14 +38,4 @@ class DelegatingHttpResponse {
 
   /// Whether the server requested that a persistent connection be maintained.
   bool get persistentConnection => _response.persistentConnection;
-}
-
-abstract class IDeserializable
-{
-  IDeserializable.fromJson(Map<String,dynamic> mapJson);
-}
-
-abstract class ISerializable
-{
-  Map<String, dynamic> toJson();
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'Genre.dart';
 
 class MovieGenres
@@ -10,4 +12,7 @@ class MovieGenres
       genres.add( Genre.fromJson(jsonGenre) );
     }
   }
+
+  static MovieGenres deserialize(String body)
+    => new MovieGenres.fromJson(json.decode(body));
 }

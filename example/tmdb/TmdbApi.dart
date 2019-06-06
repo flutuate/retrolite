@@ -2,8 +2,8 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:retrolite/flutuate_http.dart';
+import 'package:retrolite/src/http/Response.dart';
 
-import 'Genre.dart';
 import 'MovieGenres.dart';
 
 class TmdbApi
@@ -18,10 +18,10 @@ extends IApi
   TmdbApi(this.apiKey, {this.language='en-US', this.region='US'});
 
   /// Get the list of official genres for movies.
-  Future<MovieGenres> genresForMovies()
+  Future<Response<MovieGenres>> genresForMovies()
     => client.get<MovieGenres>(
         'genre/movie/list',
-        parser: genresFromJson,
+        deserializer: MovieGenres.deserialize,
         contentType: ContentType.json,
         queryParameters: {
           'api_key': apiKey,
@@ -29,7 +29,7 @@ extends IApi
           'region': region,
           'page': 1
         } );
-
+/*
   /// Get a list of upcoming movies in theatres.
   Future<List<Movie>> upcomingMovies()
   => client.get<List<Genre>>(
@@ -41,6 +41,6 @@ extends IApi
         'language': language,
         'region': region,
         'page': 1
-      } );
+      } );*/
 }
 

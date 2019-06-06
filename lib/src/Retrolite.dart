@@ -22,7 +22,7 @@ class Retrolite extends RetroliteParameters
   }
 
   @override
-  Future<Response<TReturn>> post<TReturn extends IDeserializable>(
+  Future<Response<TReturn>> post<TReturn>(
       String route,
       {List<Header> headers,
       ContentType contentType,
@@ -48,21 +48,6 @@ class Retrolite extends RetroliteParameters
     return null;
   }
 
-  /*Map<String, String> buildHeaders() =>
-      { "Content-Type": contentType.toString() };
-
-  dynamic buildContent() {
-    if( isValid(content) ) {
-      if( isTypeJson(contentType) ) {
-        return json.encode(content);
-      }
-      else if( isTypeText(contentType) ) {
-        return content as String;
-      }
-    }
-    return null;
-  }*/
-
   bool isTypeJson(ContentType contentType)
     => contentType.subType == ContentType.json.subType;
 
@@ -70,55 +55,45 @@ class Retrolite extends RetroliteParameters
     => contentType.subType == ContentType.text.subType;
 
   @override
-  Future<Response<TReturn>> get<TReturn extends IDeserializable>(String route,
+  Future<Response<TReturn>> get<TReturn>(String route,
       {List<Header> headers,
         ContentType contentType,
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> formDataParameters,
-        ParserFunction<TReturn> parser} ) async
+        DeserializerFunction<TReturn> deserializer} ) async
   {
-    http.Response httpResponse;
-    Response response;
     try {
-      httpResponse = await httpClient.get(
+      http.Response httpResponse = await httpClient.get(
           buildUrl(route, queryParameters),
           headers: parseHeaders(headers)
       );
 
-      response = new Response(httpResponse);
+      Response<TReturn> response = parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
 
-      if( isString(TReturn) ) {
-        return Future<TReturn>.value(response.body as TReturn);
-      }
-      else {
-        String body = response.body;
-        Map<String, dynamic> mapJson = json.decode(body);
-        TReturn obj = parser(mapJson);
-        return Future<TReturn>.value(obj);
-        //TODO
-      }
-    }
-    catch (e) {
-      // TODO
-      return Future<TReturn>.value(null);//TODO
+      return Future<Response<TReturn>>.value(response);
     }
     finally {
       httpClient.close();
     }
-
-    //if (typeof<TReturn>() == String) {
-      //return Future<TReturn>.value(content as TReturn);
-    //}
   }
 
-  bool isType(Type type, String typename) =>
-    type.toString().split(RegExp(r'\b')).first == typename;
-
-  bool isString(Type type) => isType(type, 'String');
-
-  bool isList(Type type) => isType(type, 'List');
-
-  bool isMap(Type type) => isType(type, 'Map');
+  Response parseResponseBody<TReturn>(http.Response httpResponse, {DeserializerFunction<TReturn> deserializer}) {
+    String nameType = TReturn.toString().split(RegExp(r'\b')).first;
+    String body = httpResponse.body.trim();
+    if( nameType == 'int') {
+      return new Response<int>(httpResponse, int.parse(body));
+    }
+    else if( nameType == 'bool' ) {
+      return new Response<bool>(httpResponse, body.toLowerCase() == 'true');
+    }
+    else if( nameType == 'double' ) {
+      return new Response<double>(httpResponse, double.parse(body));
+    }
+    else if( nameType == 'String') {
+      return new Response<String>(httpResponse, body);
+    }
+    return new Response<TReturn>(httpResponse, deserializer(body));
+  }
 
   /// Parses a complete [Uri] using [baseUrl]+[route]+[queryParameters], already encoded.
   Uri buildUrl(String route, [Map<String, dynamic> queryParameters]) {
@@ -384,5 +359,6 @@ class Retrolite extends RetroliteParameters
     api.client = this;
     return api;
   }
+
 
 }

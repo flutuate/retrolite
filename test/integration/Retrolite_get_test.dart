@@ -1,10 +1,11 @@
 import 'dart:core';
 import 'dart:io';
 import 'package:retrolite/retrolite.dart';
+import 'package:retrolite/src/http/Response.dart';
 import 'package:test/test.dart';
 
 import '../../example/retrolite_example.dart';
-import '../../example/tmdb/Genre.dart';
+import '../../example/tmdb/MovieGenres.dart';
 import '../../example/tmdb/TmdbApi.dart';
 
 import 'package:retrolite/flutuate_http.dart';
@@ -43,8 +44,8 @@ void main()
 //    });
 
     test('Get movie genres from TmdbApi', () async {
-      List<Genre> genres = await tmdbApi.genresForMovies();
-      expect(genres, isNotEmpty);
+      Response<MovieGenres> genres = await tmdbApi.genresForMovies();
+      expect(genres.value.genres, isNotEmpty);
     });
 
   });
@@ -52,10 +53,7 @@ void main()
 
 class SimpleApi extends IApi
 {
-  Future<String> getToken()
-  => client.get<String>(
-    '/',
-    contentType: ContentType.text,
-  );
+  Future<Response<String>> getToken()
+    => client.get<String>( '/', contentType: ContentType.text, );
 }
 
