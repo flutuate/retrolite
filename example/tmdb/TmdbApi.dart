@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:retrolite/flutuate_http.dart';
 
 import 'Genre.dart';
+import 'MovieGenres.dart';
 
 class TmdbApi
 extends IApi
@@ -17,8 +18,8 @@ extends IApi
   TmdbApi(this.apiKey, {this.language='en-US', this.region='US'});
 
   /// Get the list of official genres for movies.
-  Future<List<Genre>> genresForMovies()
-    => client.get<List<Genre>>(
+  Future<MovieGenres> genresForMovies()
+    => client.get<MovieGenres>(
         'genre/movie/list',
         parser: genresFromJson,
         contentType: ContentType.json,

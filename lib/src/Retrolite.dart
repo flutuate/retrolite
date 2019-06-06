@@ -6,6 +6,8 @@ import '../flutuate_http.dart';
 import 'RetroliteParameters.dart';
 import 'package:retrolite/src/http/core.dart';
 
+import 'http/Response.dart';
+
 class Retrolite extends RetroliteParameters
 {
   Map<Type, IApi> _apis = {};
@@ -20,12 +22,14 @@ class Retrolite extends RetroliteParameters
   }
 
   @override
-  Future<TReturn> post<TReturn>(String route,
+  Future<Response<TReturn>> post<TReturn extends IDeserializable>(
+      String route,
       {List<Header> headers,
-        ContentType contentType,
-        Map<String, dynamic> formDataParameters,
-        Map<String, dynamic> queryParameters,
-        dynamic body}) async
+      ContentType contentType,
+      Map<String, dynamic> formDataParameters,
+      Map<String, dynamic> queryParameters,
+      dynamic body})
+  async
   {
     /*Uri uri = buildUri();
     IOClient ioClient = new IOClient(client);
@@ -66,19 +70,22 @@ class Retrolite extends RetroliteParameters
     => contentType.subType == ContentType.text.subType;
 
   @override
-  Future<TReturn> get<TReturn>(String route,
+  Future<Response<TReturn>> get<TReturn extends IDeserializable>(String route,
       {List<Header> headers,
         ContentType contentType,
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> formDataParameters,
         ParserFunction<TReturn> parser} ) async
   {
-    http.Response response;
+    http.Response httpResponse;
+    Response response;
     try {
-      response = await httpClient.get(
+      httpResponse = await httpClient.get(
           buildUrl(route, queryParameters),
           headers: parseHeaders(headers)
       );
+
+      response = new Response(httpResponse);
 
       if( isString(TReturn) ) {
         return Future<TReturn>.value(response.body as TReturn);
