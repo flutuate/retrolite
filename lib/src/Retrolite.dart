@@ -20,8 +20,9 @@ class Retrolite
 
   final http.BaseClient httpClient;
 
-  Retrolite(this.baseUrl, {http.BaseClient httpClient})
+  Retrolite(String baseUrl, {http.BaseClient httpClient})
   : httpClient = httpClient ?? newDefaultHttpClient()
+  , baseUrl = baseUrl.trim()
   {
     /*Logger.root.level = Level.ALL; // defaults to Level.INFO
     Logger.root.onRecord.listen((record) {

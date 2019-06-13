@@ -1,24 +1,24 @@
 import 'dart:convert';
 
-class Movie
+import 'Dates.dart';
+import 'Movie.dart';
+
+//TODO missing 'dates', 'total_pages', 'total_results'.
+class UpcomingMovies
 {
-  final int id;
-  final String title;
+  final int page;
+  final List<Movie> movies = [];
+  final Dates dates;
 
-  Movie(this.id, this.title);
+  UpcomingMovies.fromJson(Map<String, dynamic> json)
+      : page = json['page']
+      , dates = Dates.fromJson(json['dates'])
+  {
+    var results  = json['results'];
+  }
 
-  Movie.fromJson(Map<String, dynamic> json)
-      : id = json['id']
-      , title = json['title'];
-
-  Map<String, dynamic> toJson() =>
-      {
-        'id': id,
-        'name': title,
-      };
-
-  static Movie deserialize(String body)
-    => new Movie.fromJson(json.decode(body));
+  static UpcomingMovies deserialize(String body)
+    => new UpcomingMovies.fromJson(json.decode(body));
 }
 
 /*import 'package:collection/collection.dart';
