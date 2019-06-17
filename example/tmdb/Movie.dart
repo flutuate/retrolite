@@ -1,56 +1,47 @@
 import 'dart:convert';
 
-class Movie
-{
-  final int id;
-  final String title;
+import 'package:retrolite/Double.dart';
 
-  Movie(this.id, this.title);
+class Movie {
+  final String posterPath;
+  final bool forAdults;
+  final String overview;
+  final DateTime releaseDate;
+  final List<int> genreIds;
+  final int id;
+  final String originalTitle;
+  final String originalLanguage;
+  final String title;
+  final String backdropPath;
+  final double popularity;
+  final int voteCount;
+  final bool hasVideo;
+  final double voteAverage;
 
   Movie.fromJson(Map<String, dynamic> json)
-      : id = json['id']
-      , title = json['title'];
+      : posterPath = json['poster_path'],
+        forAdults = json['adult'],
+        overview = json['overview'],
+        releaseDate = DateTime.parse(json['release_date']),
+        genreIds = genreIdsFromJson(json['genre_ids']),
+        id = json['id'],
+        originalTitle = json['original_title'],
+        originalLanguage = json['original_language'],
+        title = json['title'],
+        backdropPath = json['backdrop_path'],
+        popularity = Double.parse(json['popularity']),
+        voteCount = json['vote_count'],
+        hasVideo = json['video'],
+        voteAverage = Double.parse(json['vote_average']);
 
-  Map<String, dynamic> toJson() =>
-      {
-        'id': id,
-        'name': title,
-      };
+  static Movie deserialize(String body) =>
+      new Movie.fromJson(json.decode(body));
 
-  static Movie deserialize(String body)
-    => new Movie.fromJson(json.decode(body));
-}
-
-/*import 'package:collection/collection.dart';
-
-import 'Genre.dart';
-
-class Genres
-{
-  final List<Genre> genres;
-
-  Genres.fromJson(Map<String, dynamic> json) =>
-      _deserializeGenres(json['genresquestoes']);
-      : this._();
-
-  @override
-  int get length => _genres.length;
-
-  @override
-  set length(int newLength) => _genres.length = newLength;
-
-  @override
-  Genre operator [](int index) => _genres[index];
-
-  @override
-  void operator []=(int index, value) => _genres[index] = value;
-}*/
-
-List<Movie> moviesFromJson(Map<String,dynamic> json) {
-  List<Movie> movies = [];
-  List jsonMovies = json['results'];
-  for( var jsonMovie in jsonMovies ) {
-    movies.add( new Movie.fromJson(jsonMovie) );
+  static List<int> genreIdsFromJson(List jsonGenreIds) {
+    List<int> genreIds = [];
+    for (var jsonGenreId in jsonGenreIds) {
+      genreIds.add(jsonGenreId);
+    }
+    return genreIds;
   }
-  return movies;
 }

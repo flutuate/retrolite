@@ -1,20 +1,13 @@
 import 'dart:convert';
 
-class Dates
-{
-  final String minimum;
-  final String maximum;
+class DateRange {
+  final DateTime minimum;
+  final DateTime maximum;
 
-  Dates.fromJson(Map<String, dynamic> json)
-    : minimum = json['minimum']
-    , maximum = json['maximum'];
+  DateRange.fromJson(Map<String, dynamic> json)
+      : minimum = DateTime.parse(json['minimum']),
+        maximum = DateTime.parse(json['maximum']);
 
-  Map<String, dynamic> toJson() =>
-      {
-        'minimum': minimum,
-        'maximum': maximum,
-      };
-
-  static Dates deserialize(String body)
-    => new Dates.fromJson(json.decode(body));
+  static DateRange deserialize(String body) =>
+      new DateRange.fromJson(json.decode(body));
 }

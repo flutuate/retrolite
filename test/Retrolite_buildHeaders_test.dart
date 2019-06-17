@@ -4,6 +4,7 @@ import 'package:retrolite/flutuate_http.dart';
 import 'package:retrolite/retrolite.dart';
 import 'package:test/test.dart';
 
+/// TODO add tests using the ContentType parameter on 'parseHeaders' method.
 void main()
 {
   group('Retrolite.parseHeaders tests', () {
@@ -15,19 +16,19 @@ void main()
     });
 
     test('Passing a null headers list', () {
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( null );
+      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, null );
 
       expect(buildedHeaders, isEmpty);
     });
 
     test('Passing an empty headers list', () {
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( [] );
+      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, [] );
 
       expect(buildedHeaders, isEmpty);
     });
 
     test('Passing a headers list containing an null element throws exception', () {
-      expect( () => retrolite.parseHeaders([null]), throwsArgumentError );
+      expect( () => retrolite.parseHeaders(null, [null]), throwsArgumentError );
     });
 
     test('Passing an accept header', () {
@@ -36,7 +37,7 @@ void main()
           ContentType.text
       );
 
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( [
+      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, [
         acceptHeader
       ] );
 
@@ -58,7 +59,7 @@ void main()
           parameters
       );
 
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( [
+      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, [
         acceptHeader
       ] );
 

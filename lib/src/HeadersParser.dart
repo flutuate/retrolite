@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:retrolite/flutuate_http.dart';
 
 mixin HeadersParser
@@ -5,12 +7,15 @@ mixin HeadersParser
   /// Parses a [Header] list to a [Map]<String,String> and returns it.
   ///
   /// The method throws an [ArgumentError] if any element of [headers] is ```null```.
-  Map<String,String> parseHeaders(List<Header> headers) {
+  Map<String,String> parseHeaders(ContentType contentType, List<Header> headers) {
     Map<String,String> buildedHeaders = {};
     headers ??= [];
     for( Header header in headers ) {
       MapEntry<String,String> entry = parseMapEntryHeader(header);
       buildedHeaders.addEntries( [ entry ] );
+    }
+    if( contentType != null ) {
+      buildedHeaders[HttpHeaders.contentTypeHeader] = contentType.toString();
     }
     return buildedHeaders;
   }

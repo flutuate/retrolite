@@ -22,9 +22,12 @@ abstract class IRestClient
   /// TODO add parameter 'timeout'
   Future<Response<TResult>> post<TResult>(
       String route,
-      {List<Header> headers,
-      ContentType contentType,
-      Map<String, dynamic> formDataParameters,
-      Map<String, dynamic> queryParameters,
-      dynamic body});
+      {
+        List<Header> headers,
+        ContentType contentType,
+        Map<String, dynamic> formDataParameters,
+        Map<String, dynamic> queryParameters,
+        DeserializerFunction<TResult> deserializer,
+        dynamic body
+      } );
 }
