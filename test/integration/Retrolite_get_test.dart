@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:retrolite/Secrets.dart';
 import 'package:retrolite/retrolite.dart';
 import 'package:retrolite/src/http/Response.dart';
 import 'package:test/test.dart';
@@ -12,22 +13,24 @@ void main()
   group('Retrolite.get integration tests', () {
 
     Retrolite retroliteTmdbApi;
-    TmdbApi tmdbApi;
+    TmdbApi api;
 
-    setUpAll(() {
+    setUpAll(() async {
 
       retroliteTmdbApi = Retrolite(
           'https://api.themoviedb.org/3/',
           httpClient: newUnsafeHttpClient()
       );
 
-      tmdbApi = retroliteTmdbApi.register<TmdbApi>(
-        new TmdbApi('1f54bd990f1cdfb230adb312546d765d')
+      Secrets secrets = await Secrets.loadFromFile();
+
+      api = retroliteTmdbApi.register<TmdbApi>(
+        new TmdbApi(secrets['tmdb_token'])
       );
     });
 
     test('Get movie genres from TmdbApi', () async {
-      Response<MovieGenres> genres = await tmdbApi.genresForMovies();
+      Response<MovieGenres> genres = await api.genresForMovies();
       expect(genres.value.genres, isNotEmpty);
     });
 
