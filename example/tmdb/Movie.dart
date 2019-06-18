@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:retrolite/Double.dart';
+import 'package:flutuate_api/flutuate_api.dart';
 
 class Movie {
   final String posterPath;

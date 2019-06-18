@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'package:flutuate_api/flutuate_api.dart';
 
-import 'package:retrolite/flutuate_http.dart';
-
+@deprecated
 mixin HeadersParser
 {
   /// Parses a [Header] list to a [Map]<String,String> and returns it.
@@ -11,7 +11,8 @@ mixin HeadersParser
     Map<String,String> buildedHeaders = {};
     headers ??= [];
     for( Header header in headers ) {
-      MapEntry<String,String> entry = parseMapEntryHeader(header);
+      //MapEntry<String,String> entry = parseMapEntryHeader(header);
+      MapEntry<String,String> entry = header.toMapEntry(header);
       buildedHeaders.addEntries( [ entry ] );
     }
     if( contentType != null ) {

@@ -2,14 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:retrolite/retrolite.dart';
-import 'package:retrolite/src/http/core.dart';
 
-import '../flutuate_http.dart';
+import 'package:flutuate_api/flutuate_api.dart';
 
 import 'HeadersParser.dart';
 import 'QueryParamsParser.dart';
 import 'ResponseBodyDeserializer.dart';
-import 'http/Response.dart';
 
 class Retrolite
     with HeadersParser, QueryParamsParser, ResponseBodyDeserializer

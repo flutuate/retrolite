@@ -1,8 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 
-import 'package:retrolite/flutuate_http.dart';
-import 'package:retrolite/src/http/Response.dart';
+import 'package:flutuate_api/flutuate_api.dart';
 
 import 'MovieGenres.dart';
 import 'UpcomingMovies.dart';

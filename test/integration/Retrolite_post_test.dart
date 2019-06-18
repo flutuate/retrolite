@@ -1,6 +1,6 @@
 import 'dart:core';
 import 'package:retrolite/retrolite.dart';
-import 'package:retrolite/src/http/Response.dart';
+import 'package:flutuate_api/flutuate_api.dart' show Response;
 import 'package:test/test.dart';
 
 import '../../example/reqres/RegisterContent.dart';

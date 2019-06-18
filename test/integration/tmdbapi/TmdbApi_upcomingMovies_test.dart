@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:retrolite/Secrets.dart';
 import 'package:retrolite/retrolite.dart';
-import 'package:retrolite/src/http/Response.dart';
+import 'package:flutuate_api/flutuate_api.dart' show Response;
 import 'package:test/test.dart';
 
 import '../../../example/retrolite_example.dart';

@@ -5,6 +5,7 @@ import 'package:http/io_client.dart';
 import 'package:retrolite/Secrets.dart';
 import 'package:retrolite/flutuate_http.dart';
 import 'package:retrolite/retrolite.dart';
+import 'package:flutuate_api/flutuate_api.dart';
 
 import 'tmdb/TmdbApi.dart';
 

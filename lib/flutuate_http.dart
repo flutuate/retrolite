@@ -1,6 +1,6 @@
 library flutuate_http;
 
-export 'src/http/core.dart';
-export 'src/http/IApi.dart';
-export 'src/http/IRestClient.dart';
-export 'src/http/Headers.dart';
+export 'src/HeadersParser.dart';
+export 'src/QueryParamsParser.dart';
+export 'src/ResponseBodyDeserializer.dart';
+export 'src/Retrolite.dart';
