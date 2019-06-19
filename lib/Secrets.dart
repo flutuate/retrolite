@@ -24,9 +24,7 @@ import 'package:collection/collection.dart';
 ///    }
 /// ]
 /// ```
-class Secrets
-extends DelegatingMap
-{
+class Secrets extends DelegatingMap {
   Secrets(Map base) : super(base);
 
   /// Load the secrets tokens from an external file. First, the method will search the file
@@ -40,13 +38,12 @@ extends DelegatingMap
     final String content = file.readAsStringSync();
     var list = json.decode(content);
 
-    final Map<String,String> tokens = {};
-    for( Map element in list ) {
+    final Map<String, String> tokens = {};
+    for (Map element in list) {
       var key = element.keys.first;
       var value = element.values.first;
       tokens[key] = value;
     }
-    return Future<Secrets>.value( new Secrets(tokens) );
+    return Future<Secrets>.value(new Secrets(tokens));
   }
 }
-

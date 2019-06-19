@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-mixin QueryParamsParser
-{
+mixin QueryParamsParser {
   /// Build and returns an url encoded string containing the parameters specified
   /// in [queryParameters].
   ///
@@ -39,7 +38,7 @@ mixin QueryParamsParser
   String buildQueryParameters(Map<String, dynamic> queryParameters) {
     queryParameters ??= {};
     String formattedParameters = '';
-    for( String name in queryParameters.keys ) {
+    for (String name in queryParameters.keys) {
       final value = queryParameters[name];
       final formattedValue = encodeQueryValue(value);
       final delimiter = formattedParameters.isEmpty ? '?' : '&';
@@ -56,16 +55,13 @@ mixin QueryParamsParser
   /// Otherwise, the value returned from [value.toString] will be encoded.
   String encodeQueryValue(dynamic value) {
     String formattedValue;
-    if( value == null ) {
+    if (value == null) {
       formattedValue = '';
-    }
-    else if( value is List ) {
+    } else if (value is List) {
       formattedValue = formatQueryValueAsList(value);
-    }
-    else if( value is Map ) {
+    } else if (value is Map) {
       formattedValue = formatQueryValueAsMap(value);
-    }
-    else {
+    } else {
       formattedValue = value.toString();
     }
     return Uri.encodeQueryComponent(formattedValue);
@@ -81,28 +77,24 @@ mixin QueryParamsParser
   /// [String] values will be formatted with quotes (```"value"```).
   /// Finally, if the parameter contains [List] values, they will be formatted as described above.
   String formatQueryValueAsList(List values) {
-    if( values == null ) {
+    if (values == null) {
       return '';
     }
     String formattedValue = '[';
-    for( var value in values ) {
-      if(formattedValue.length > 1) {
+    for (var value in values) {
+      if (formattedValue.length > 1) {
         formattedValue += ',';
       }
 
-      if( value == null ) {
+      if (value == null) {
         formattedValue += 'null';
-      }
-      else if( value is String ) {
+      } else if (value is String) {
         formattedValue += '\"$value\"';
-      }
-      else if(value is List) {
+      } else if (value is List) {
         formattedValue += formatQueryValueAsList(value);
-      }
-      else if(value is Map) {
+      } else if (value is Map) {
         formattedValue += formatQueryValueAsMap(value);
-      }
-      else {
+      } else {
         formattedValue += value.toString();
       }
     }
@@ -119,7 +111,7 @@ mixin QueryParamsParser
   /// [String] values will be formatted with quotes (```"value"```).
   /// Finally, if the parameter contains [Map] values, they will be formatted as described above.
   String formatQueryValueAsMap(Map values) {
-    if(values == null) {
+    if (values == null) {
       return '';
     }
     return json.encode(values);

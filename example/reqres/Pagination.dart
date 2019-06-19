@@ -2,13 +2,15 @@ import 'dart:convert';
 
 class Pagination {
   final int page;
+  final int perPage;
+  final int total;
   final int totalPages;
-  final int totalResults;
 
   Pagination.fromJson(Map<String, dynamic> json)
       : page = json['page'],
+        perPage = json['per_page'],
         totalPages = json['total_pages'],
-        totalResults = json['total_results'];
+        total = json['total'];
 
   static Pagination deserialize(String body) =>
       new Pagination.fromJson(json.decode(body));

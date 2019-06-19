@@ -8,31 +8,24 @@ import '../../example/retrolite_example.dart';
 import '../../example/tmdb/MovieGenres.dart';
 import '../../example/tmdb/TmdbApi.dart';
 
-void main()
-{
+void main() {
   group('Retrolite.get integration tests', () {
-
     Retrolite retroliteTmdbApi;
     TmdbApi api;
 
     setUpAll(() async {
-
-      retroliteTmdbApi = Retrolite(
-          'https://api.themoviedb.org/3/',
-          httpClient: newUnsafeHttpClient()
-      );
+      retroliteTmdbApi = Retrolite('https://api.themoviedb.org/3/',
+          httpClient: newUnsafeHttpClient());
 
       Secrets secrets = await Secrets.loadFromFile();
 
-      api = retroliteTmdbApi.register<TmdbApi>(
-        new TmdbApi(secrets['tmdb_token'])
-      );
+      api = retroliteTmdbApi
+          .register<TmdbApi>(new TmdbApi(secrets['tmdb_token']));
     });
 
     test('Get movie genres from TmdbApi', () async {
       Response<MovieGenres> genres = await api.genresForMovies();
       expect(genres.value.genres, isNotEmpty);
     });
-
   });
 }

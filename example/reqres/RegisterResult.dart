@@ -11,5 +11,8 @@ class RegisterResult {
   static RegisterResult deserialize(String body) =>
       new RegisterResult.fromJson(json.decode(body));
 
-
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'token': token,
+      };
 }
