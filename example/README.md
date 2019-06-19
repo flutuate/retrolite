@@ -1,6 +1,6 @@
 # retrolite_example
 
-Demonstrates how to use the [Retrolite](https://pub.dev/retrolite) package.
+Demonstrates how to use the [Retrolite](https://pub.dev/packages/retrolite) package.
 
 ## Getting Started
 

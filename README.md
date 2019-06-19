@@ -1,6 +1,5 @@
 # retrolite
-**retrolite** is a Dart restful client, a lite HTTP client lightly based in the [Retrofit](https://square.github.io/retrofit). 
-
+**retrolite** is a RESTful API client for Dart and Flutter, with a simple API syntax, without reflection. 
 
 ## Configuration
 Add `retrolite` to `pubspec.yaml` under the `dependencies` field.
@@ -10,7 +9,6 @@ dependencies:
   retrolite: ^latest_version
 ```
 
-
 ## Import
 Add the following import in your library :
 
@@ -18,13 +16,43 @@ Add the following import in your library :
 import 'package:retrolite/retrolite.dart';
 ```
 
+## Example
+Below, a simple provider sample to [REQ|RES](https://reqres.in) API:
+```dart
+/// [REQ|RES](https://reqres.in) API provider 
+class ReqResApi extends IApi {
+  /// Get the users list.
+  Future<Response<ListUsers>> listUsers(int page) => 
+    client.get<ListUsers>(
+      'api/users?page=$page',
+      contentType: ContentType.json,
+      deserializer: ListUsers.deserialize,
+    );
+
+  /// Request the users list with delay.
+  Future<Response<ListUsers>> listUsersWithDelay(int delay) => 
+    client.get<ListUsers>(
+      'api/users',
+      queryParameters: {
+        'delay': delay
+      },
+      contentType: ContentType.json,
+      deserializer: ListUsers.deserialize,
+    );
+
+  /// Request the register service with success.
+  Future<Response<RegisterResult>> register(RegisterContent content) => 
+    client.post<RegisterResult>(
+      'api/register',
+      deserializer: RegisterResult.deserialize,
+      contentType: ContentType.json,
+      body: content
+    );
+}
+```
 
 ## Usage
-*See below.*
-
-## Example
 The [sample project](https://github.com/flutuate/retrolite/tree/master/example) has more details about how to use the Retrolite package.
-
 
 ## Features and bugs
 Please file feature requests and bugs at the [issue tracker][tracker].
