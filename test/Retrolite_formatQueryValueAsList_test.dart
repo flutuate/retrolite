@@ -3,7 +3,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Retrolite.formatQueryValueAsList tests', () {
-
     Retrolite retrolite;
 
     setUpAll(() {
@@ -57,25 +56,35 @@ void main() {
     });
 
     test('Passing list with an empty map and an empty list arguments', () {
-      var queryParameters = [{},[]];
+      var queryParameters = [{}, []];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
       expect(formattedValue, '[{},[]]');
     });
 
-    test('Passing list with an empty map and an empty list containing a primitive argument', () {
-      var queryParameters = [{},['João']];
+    test(
+        'Passing list with an empty map and an empty list containing a primitive argument',
+        () {
+      var queryParameters = [
+        {},
+        ['João']
+      ];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
       expect(formattedValue, '[{},["João"]]');
     });
 
     test('Passing list with a list argument', () {
-      var queryParameters = ['João', ['Smith', 'da Silva']];
+      var queryParameters = [
+        'João',
+        ['Smith', 'da Silva']
+      ];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
-      expect(formattedValue,  '["João",["Smith","da Silva"]]');
+      expect(formattedValue, '["João",["Smith","da Silva"]]');
     });
 
     test('Passing list with a map argument containing one element', () {
-      var queryParameters = [{'name':'João Smith'}];
+      var queryParameters = [
+        {'name': 'João Smith'}
+      ];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
       expect(formattedValue, '[{"name":"João Smith"}]');
     });
@@ -83,15 +92,11 @@ void main() {
     test('Passing list with primitives and map arguments', () {
       var queryParameters = [
         'City',
-        {
-          'name': 'Londrina',
-          'latitude': -23.31028,
-          'longitude': -51.16278
-        }
+        {'name': 'Londrina', 'latitude': -23.31028, 'longitude': -51.16278}
       ];
       var formattedValue = retrolite.formatQueryValueAsList(queryParameters);
-      expect(formattedValue, '["City",{"name":"Londrina","latitude":-23.31028,"longitude":-51.16278}]');
+      expect(formattedValue,
+          '["City",{"name":"Londrina","latitude":-23.31028,"longitude":-51.16278}]');
     });
-
   });
 }

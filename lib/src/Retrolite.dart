@@ -21,7 +21,7 @@ class Retrolite
   Retrolite(String baseUrl, {http.BaseClient httpClient})
       : httpClient = httpClient ?? newDefaultHttpClient(),
         baseUrl = baseUrl.trim() {
-    /*Logger.root.level = Level.ALL; // defaults to Level.INFO
+    /*TODO Logger.root.level = Level.ALL; // defaults to Level.INFO
     Logger.root.onRecord.listen((record) {
       print('${record.level.name}: ${record.time}: ${record.message}');
     });*/
@@ -34,17 +34,15 @@ class Retrolite
       Map<String, dynamic> formDataParameters,
       Map<String, dynamic> queryParameters,
       dynamic body,
-      DeserializerFunction<TReturn> deserializer}) async
-  {
+      DeserializerFunction<TReturn> deserializer}) async {
     try {
       http.Response httpResponse = await httpClient.post(
           parseUrl(route, queryParameters),
           headers: parseHeaders(contentType, headers),
-          body: parseBody(contentType, body)
-      );
+          body: parseBody(contentType, body));
 
       Response<TReturn> response =
-        parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {
@@ -70,7 +68,7 @@ class Retrolite
 
   /// TODO To implement conversion providers.
   dynamic parseBody(ContentType contentType, dynamic body) {
-    if( isTypeJson(contentType) ) {
+    if (isTypeJson(contentType)) {
       return jsonEncode(body);
     }
     return body.toString();
@@ -88,15 +86,14 @@ class Retrolite
       ContentType contentType,
       Map<String, dynamic> queryParameters,
       Map<String, dynamic> formDataParameters,
-      DeserializerFunction<TReturn> deserializer}) async
-  {
+      DeserializerFunction<TReturn> deserializer}) async {
     try {
       http.Response httpResponse = await httpClient.get(
           parseUrl(route, queryParameters),
           headers: parseHeaders(contentType, headers));
 
       Response<TReturn> response =
-        parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {

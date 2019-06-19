@@ -6,10 +6,8 @@ import 'package:retrolite/retrolite.dart';
 import 'package:test/test.dart';
 
 /// TODO add tests using the ContentType parameter on 'parseHeaders' method.
-void main()
-{
+void main() {
   group('Retrolite.parseHeaders tests', () {
-
     Retrolite retrolite;
 
     setUpAll(() {
@@ -17,59 +15,61 @@ void main()
     });
 
     test('Passing a null headers list', () {
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, null );
+      Map<String, String> buildedHeaders = retrolite.parseHeaders(null, null);
 
       expect(buildedHeaders, isEmpty);
     });
 
     test('Passing an empty headers list', () {
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, [] );
+      Map<String, String> buildedHeaders = retrolite.parseHeaders(null, []);
 
       expect(buildedHeaders, isEmpty);
     });
 
-    test('Passing a headers list containing an null element throws exception', () {
-      expect( () => retrolite.parseHeaders(null, [null]), throwsArgumentError );
+    test('Passing a headers list containing an null element throws exception',
+        () {
+      expect(() => retrolite.parseHeaders(null, [null]), throwsArgumentError);
     });
 
     test('Passing an accept header', () {
-      Header acceptHeader = new Header(
-          HttpHeaders.acceptHeader,
-          ContentType.text
-      );
+      Header acceptHeader =
+          new Header(HttpHeaders.acceptHeader, ContentType.text);
 
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, [
-        acceptHeader
-      ] );
+      Map<String, String> buildedHeaders =
+          retrolite.parseHeaders(null, [acceptHeader]);
 
       expect(buildedHeaders, isNotEmpty);
       expect(buildedHeaders, contains(HttpHeaders.acceptHeader));
-      expect(buildedHeaders[HttpHeaders.acceptHeader], ContentType.text.toString());
+      expect(buildedHeaders[HttpHeaders.acceptHeader],
+          ContentType.text.toString());
     });
 
     test('Passing an accept header with parameters', () {
       List parameters = [
-        'João Smith', 45, 1.23,
+        'João Smith',
+        45,
+        1.23,
         ['abc', 123, 4.56, true],
-        { 'v1': 1, 'v2': 0.2, 'v3': '3', 'v4': true, }
+        {
+          'v1': 1,
+          'v2': 0.2,
+          'v3': '3',
+          'v4': true,
+        }
       ];
 
-      Header acceptHeader = new Header(
-          HttpHeaders.acceptHeader,
-          ContentType.text,
-          parameters
-      );
+      Header acceptHeader =
+          new Header(HttpHeaders.acceptHeader, ContentType.text, parameters);
 
-      Map<String,String> buildedHeaders = retrolite.parseHeaders( null, [
-        acceptHeader
-      ] );
+      Map<String, String> buildedHeaders =
+          retrolite.parseHeaders(null, [acceptHeader]);
 
       expect(buildedHeaders, isNotEmpty);
       expect(buildedHeaders, contains(HttpHeaders.acceptHeader));
-      expect(buildedHeaders[HttpHeaders.acceptHeader], ContentType.text.toString() + ';João Smith,45,1.23,abc,123,4.56,true,v1=1,v2=0.2,v3=3,v4=true');
+      expect(
+          buildedHeaders[HttpHeaders.acceptHeader],
+          ContentType.text.toString() +
+              ';João Smith,45,1.23,abc,123,4.56,true,v1=1,v2=0.2,v3=3,v4=true');
     });
-
-
   });
 }
-

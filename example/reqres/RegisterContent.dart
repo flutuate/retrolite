@@ -4,8 +4,7 @@ class RegisterContent {
 
   RegisterContent(this.email, this.password);
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'email': email,
         'password': password,
       };

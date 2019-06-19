@@ -7,9 +7,19 @@ import 'package:retrolite/flutuate_http.dart';
 import 'package:retrolite/retrolite.dart';
 import 'package:flutuate_api/flutuate_api.dart';
 
+import 'reqres/RegisterContent.dart';
+import 'reqres/ReqResApi.dart';
 import 'tmdb/TmdbApi.dart';
 
 main() async {
+  await listMoviesGenresFromTmdbApi();
+
+  await registerFromReqResApi();
+}
+
+void listMoviesGenresFromTmdbApi() async {
+  print('Calling TMDB api...\n');
+
   Retrolite retrolite = Retrolite(
     'https://api.themoviedb.org/3/',
     httpClient: newHttpClient(),
@@ -17,11 +27,38 @@ main() async {
 
   Secrets secrets = await Secrets.loadFromFile();
 
-  TmdbApi api = retrolite.register<TmdbApi>( new TmdbApi(secrets['tmdb_token']) );
+  if (secrets.containsKey('tmdb_token')) {
+    TmdbApi api =
+        retrolite.register<TmdbApi>(new TmdbApi(secrets['tmdb_token']));
 
-  await api.genresForMovies().then((genres) {
-    print(genres);
+    await api.genresForMovies().then((response) {
+      for (var genre in response.value.genres) {
+        print(genre.toJson());
+      }
+    });
+  } else {
+    print(
+        'Please, specifies you TMDB API token in "resources/secrets.json" file.');
+  }
+  print('');
+}
+
+void registerFromReqResApi() async {
+  print('Calling REQ|RES api...\n');
+
+  Retrolite retrolite = Retrolite(
+    'https://reqres.in',
+    httpClient: newUnsafeHttpClient(),
+  );
+
+  ReqResApi api = retrolite.register<ReqResApi>(new ReqResApi());
+
+  RegisterContent content = new RegisterContent('eve.holt@reqres.in', 'pistol');
+
+  await api.register(content).then((response) {
+    print(response.value.toJson());
   });
+  print('');
 }
 
 /// Returns an instance of the default http client.
@@ -33,7 +70,7 @@ http.BaseClient newHttpClient() {
 http.BaseClient newUnsafeHttpClient() {
   final bool trustSelfSigned = true;
   HttpClient httpClient = new HttpClient()
-    ..badCertificateCallback = ((X509Certificate cert, String host, int port) => trustSelfSigned);
+    ..badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => trustSelfSigned);
   return new IOClient(httpClient);
 }
-

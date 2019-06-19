@@ -3,7 +3,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Retrolite.encodeQueryValue tests', () {
-
     var retrolite;
 
     setUpAll(() {
@@ -77,79 +76,89 @@ void main() {
       expect(parameters, '%5B13579.02468%5D');
     });
 
-
     test('Map with one string', () {
-      var parameters = retrolite.encodeQueryValue({'name':'John'});
+      var parameters = retrolite.encodeQueryValue({'name': 'John'});
       expect(parameters, '%7B%22name%22%3A%22John%22%7D');
     });
 
     test('Map containing one string with latin characters', () {
-      var parameters = retrolite.encodeQueryValue({'name':'João Smith'});
+      var parameters = retrolite.encodeQueryValue({'name': 'João Smith'});
       expect(parameters, '%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D');
     });
 
     test('Map with one integer', () {
-      var parameters = retrolite.encodeQueryValue({'int':13579});
+      var parameters = retrolite.encodeQueryValue({'int': 13579});
       expect(parameters, '%7B%22int%22%3A13579%7D');
     });
 
     test('Map with one double', () {
-      var parameters = retrolite.encodeQueryValue({'double':13579.02468});
+      var parameters = retrolite.encodeQueryValue({'double': 13579.02468});
       expect(parameters, '%7B%22double%22%3A13579.02468%7D');
     });
 
     //~~~~~~~~~~~~~~
 
     test('List with null value', () {
-      var queryParameters = [ null ];
+      var queryParameters = [null];
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%5Bnull%5D');
     });
 
     test('List with some primitives', () {
       var queryParameters = [
-        'João Smith', 45, 13579.02468,
+        'João Smith',
+        45,
+        13579.02468,
       ];
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%5D');
     });
 
     test('List with empty map', () {
-      var queryParameters = [ { } ];
+      var queryParameters = [{}];
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%5B%7B%7D%5D');
     });
 
     test('List with map', () {
-      var queryParameters = [ {
-        'name':'João Smith'
-      } ];
+      var queryParameters = [
+        {'name': 'João Smith'}
+      ];
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%5B%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%5D');
     });
 
     test('List with primitives and map', () {
       var queryParameters = [
-        'João Smith', 45, 13579.02468,
-        { 'name': 'João Smith'}
+        'João Smith',
+        45,
+        13579.02468,
+        {'name': 'João Smith'}
       ];
       var parameters = retrolite.encodeQueryValue(queryParameters);
-      expect(parameters, '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%2C%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%5D');
+      expect(parameters,
+          '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%2C%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%5D');
     });
 
     test('List with primitives, map and list', () {
       var queryParameters = [
-        'João Smith', 45, 13579.02468, '+554730303030',
-        { 'name': 'João Smith'},
-        [ 'Londrina', -23.31028, -51.16278]
+        'João Smith',
+        45,
+        13579.02468,
+        '+554730303030',
+        {'name': 'João Smith'},
+        ['Londrina', -23.31028, -51.16278]
       ];
       var parameters = retrolite.encodeQueryValue(queryParameters);
-      expect(parameters, '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%2C%22%2B554730303030%22%2C%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%2C%5B%22Londrina%22%2C-23.31028%2C-51.16278%5D%5D');
+      expect(parameters,
+          '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%2C%22%2B554730303030%22%2C%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%2C%5B%22Londrina%22%2C-23.31028%2C-51.16278%5D%5D');
     });
 
     test('List with primitives, map and list, with special values', () {
       var queryParameters = [
-        'João Smith', 45, 13579.02468,
+        'João Smith',
+        45,
+        13579.02468,
         {
           'name': 'João Smith',
           'nullvalue': null,
@@ -157,59 +166,65 @@ void main() {
           'comma': ',',
           'specialChars': '%\\\\/@#:\'\\"'
         },
-        [ 'Londrina', -23.31028, -51.16278, null, '', ',', '%\\\\/@#:\'\\"']
+        ['Londrina', -23.31028, -51.16278, null, '', ',', '%\\\\/@#:\'\\"']
       ];
       var parameters = retrolite.encodeQueryValue(queryParameters);
-      expect(parameters, '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%2C%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%2C%22nullvalue%22%3Anull%2C%22emptyValue%22%3A%22%22%2C%22comma%22%3A%22%2C%22%2C%22specialChars%22%3A%22%25%5C%5C%5C%5C%2F%40%23%3A%27%5C%5C%5C%22%22%7D%2C%5B%22Londrina%22%2C-23.31028%2C-51.16278%2Cnull%2C%22%22%2C%22%2C%22%2C%22%25%5C%5C%2F%40%23%3A%27%5C%22%22%5D%5D');
+      expect(parameters,
+          '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%2C%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%2C%22nullvalue%22%3Anull%2C%22emptyValue%22%3A%22%22%2C%22comma%22%3A%22%2C%22%2C%22specialChars%22%3A%22%25%5C%5C%5C%5C%2F%40%23%3A%27%5C%5C%5C%22%22%7D%2C%5B%22Londrina%22%2C-23.31028%2C-51.16278%2Cnull%2C%22%22%2C%22%2C%22%2C%22%25%5C%5C%2F%40%23%3A%27%5C%22%22%5D%5D');
     });
 
     //~~~~~~~~~~~~~~~~
 
     test('Map with null value', () {
-      var queryParameters = { 'nullValue': null };
+      var queryParameters = {'nullValue': null};
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%7B%22nullValue%22%3Anull%7D');
     });
 
     test('List with some primitives', () {
-      var queryParameters = [
-        'João Smith', 45, 13579.02468
-      ];
+      var queryParameters = ['João Smith', 45, 13579.02468];
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%5B%22Jo%C3%A3o+Smith%22%2C45%2C13579.02468%5D');
     });
 
     test('Map with empty map', () {
-      var queryParameters = { { } };
+      var queryParameters = {{}};
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%7B%7B%7D%7D');
     });
 
     test('Map with map', () {
-      var queryParameters = { {
-        'name':'João Smith'
-      } };
+      var queryParameters = {
+        {'name': 'João Smith'}
+      };
       var parameters = retrolite.encodeQueryValue(queryParameters);
       expect(parameters, '%7B%7Bname%3A+Jo%C3%A3o+Smith%7D%7D');
     });
 
     test('Map with primitives and map', () {
       var queryParameters = {
-        'name':'João Smith', 'age':45, 'double':13579.02468,
-        'map': { 'name': 'João Smith'}
+        'name': 'João Smith',
+        'age': 45,
+        'double': 13579.02468,
+        'map': {'name': 'João Smith'}
       };
       var parameters = retrolite.encodeQueryValue(queryParameters);
-      expect(parameters, '%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%2C%22age%22%3A45%2C%22double%22%3A13579.02468%2C%22map%22%3A%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%7D');
+      expect(parameters,
+          '%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%2C%22age%22%3A45%2C%22double%22%3A13579.02468%2C%22map%22%3A%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%7D');
     });
 
     test('Map with primitives, map and list', () {
       var queryParameters = {
-        'name': 'João Smith', 'age': 45, 'double': 13579.02468, 'phone':'+554730303030',
-        'map': { 'name': 'João Smith'},
-        'list': [ 'Londrina', -23.31028, -51.16278]
+        'name': 'João Smith',
+        'age': 45,
+        'double': 13579.02468,
+        'phone': '+554730303030',
+        'map': {'name': 'João Smith'},
+        'list': ['Londrina', -23.31028, -51.16278]
       };
       var parameters = retrolite.encodeQueryValue(queryParameters);
-      expect(parameters, '%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%2C%22age%22%3A45%2C%22double%22%3A13579.02468%2C%22phone%22%3A%22%2B554730303030%22%2C%22map%22%3A%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%2C%22list%22%3A%5B%22Londrina%22%2C-23.31028%2C-51.16278%5D%7D');
+      expect(parameters,
+          '%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%2C%22age%22%3A45%2C%22double%22%3A13579.02468%2C%22phone%22%3A%22%2B554730303030%22%2C%22map%22%3A%7B%22name%22%3A%22Jo%C3%A3o+Smith%22%7D%2C%22list%22%3A%5B%22Londrina%22%2C-23.31028%2C-51.16278%5D%7D');
     });
 
     test('Map with primitives, map and list, with special values', () {
