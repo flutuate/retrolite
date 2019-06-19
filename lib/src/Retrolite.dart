@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:retrolite/retrolite.dart';
 
 import 'package:flutuate_api/flutuate_api.dart';
 
@@ -27,6 +26,7 @@ class Retrolite
     });*/
   }
 
+  /// Make a POST request.
   @override
   Future<Response<TReturn>> post<TReturn>(String route,
       {List<Header> headers,

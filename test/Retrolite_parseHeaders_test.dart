@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutuate_api/flutuate_api.dart';
-import 'package:retrolite/flutuate_http.dart';
 import 'package:retrolite/retrolite.dart';
 import 'package:test/test.dart';
 
