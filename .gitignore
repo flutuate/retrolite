@@ -3,19 +3,22 @@
 *.ipr
 *.iws
 .idea/
+.idea/libraries/Dart_Packages.xml
 
 # Files and directories created by pub
 .dart_tool/
 .packages
+
 # Remove the following pattern if you wish to check in your lock file
 pubspec.lock
 
 # Conventional directory for build outputs
 build/
+example/ios/
+example/android/
 
 # Directory created by dartdoc
 doc/api/
-
 
 example/resources/secrets.json
 test/resources/secrets.json
