@@ -1,0 +1,17 @@
+name: retrolite
+description: An REST client for Dart and Flutter, litening based on [Retrofit](https://square.github.io/retrofit/).
+version: 0.0.1
+homepage: https://www.github.com/flutuate/retrolite
+author: Luciano Bonifacio Rodrigues <flutuate.io@gmail.com>
+
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
+dependencies:
+  http: ^0.12.0+2
+  collection: ^1.14.11
+  flutuate_api: ^1.0.0+1
+
+dev_dependencies:
+  pedantic: ^1.0.0
+  test: ^1.0.0

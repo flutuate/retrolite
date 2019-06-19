@@ -1,3 +1,3 @@
 ## 0.0.1
 
-* Initial commit
+- Initial version, created by Luciano Rodrigues
