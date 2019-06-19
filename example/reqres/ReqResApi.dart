@@ -7,20 +7,27 @@ import 'RegisterContent.dart';
 import 'RegisterResult.dart';
 import 'Users.dart';
 
+/// [REQ|RES](https://reqres.in) API provider.
 class ReqResApi extends IApi {
-  /// Call the *list users* service from ```https://reqres.in```
+  /// Get the users list.
   Future<Response<ListUsers>> listUsers(int page) => client.get<ListUsers>(
         'api/users?page=$page',
-
-        /// Or use:
-        /// queryParameters: {
-        ///  'page': 2
-        ///},
         contentType: ContentType.json,
         deserializer: ListUsers.deserialize,
       );
 
-  /// Call the *register - successful* service from ```https://reqres.in```
+  /// Request the users list with delay.
+  Future<Response<ListUsers>> listUsersWithDelay(int delay) =>
+      client.get<ListUsers>(
+        'api/users',
+        queryParameters: {
+          'delay': delay
+        },
+        contentType: ContentType.json,
+        deserializer: ListUsers.deserialize,
+      );
+
+  /// Request the register service with success.
   Future<Response<RegisterResult>> register(RegisterContent content) =>
       client.post<RegisterResult>('api/register',
           deserializer: RegisterResult.deserialize,
