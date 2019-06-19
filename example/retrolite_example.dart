@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:retrolite/Secrets.dart';
-import 'package:retrolite/flutuate_http.dart';
+import 'package:retrolite/flutuate_api.dart';
 import 'package:retrolite/retrolite.dart';
-import 'package:flutuate_api/flutuate_api.dart';
 
 import 'reqres/RegisterContent.dart';
 import 'reqres/ReqResApi.dart';
@@ -22,7 +21,7 @@ void listMoviesGenresFromTmdbApi() async {
 
   Retrolite retrolite = Retrolite(
     'https://api.themoviedb.org/3/',
-    httpClient: newHttpClient(),
+    httpClientCreator: newHttpClient,
   );
 
   Secrets secrets = await Secrets.loadFromFile();
@@ -48,7 +47,7 @@ void registerFromReqResApi() async {
 
   Retrolite retrolite = Retrolite(
     'https://reqres.in',
-    httpClient: newUnsafeHttpClient(),
+    httpClientCreator: newUnsafeHttpClient,
   );
 
   ReqResApi api = retrolite.register<ReqResApi>(new ReqResApi());

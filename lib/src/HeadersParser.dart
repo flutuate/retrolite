@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:flutuate_api/flutuate_api.dart';
+
+import '../flutuate_api.dart';
 
 mixin HeadersParser {
   /// Parses a [Header] list to a [Map]<String,String> and returns it.

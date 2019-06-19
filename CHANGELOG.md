@@ -1,3 +1,8 @@
+## 1.1.0
+
+- Migrated package **flutuate_api** to here;
+- Implemented PUT, PATCH, HEAD, DELETE requests.
+
 ## 1.0.0
 
 - First release.

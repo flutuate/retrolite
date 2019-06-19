@@ -1,6 +1,7 @@
 import 'dart:core';
-import 'package:retrolite/retrolite.dart';
-import 'package:flutuate_api/flutuate_api.dart' show Response;
+
+import 'package:retrolite/flutuate_api.dart' show Response;
+import 'package:retrolite/retrolite.dart' hide isNotNull;
 import 'package:test/test.dart';
 
 import '../../example/reqres/RegisterContent.dart';
@@ -14,8 +15,8 @@ void main() {
     ReqResApi api;
 
     setUpAll(() {
-      retrolite =
-          Retrolite('https://reqres.in/', httpClient: newUnsafeHttpClient());
+      retrolite = Retrolite('https://reqres.in/',
+          httpClientCreator: newUnsafeHttpClient);
 
       api = retrolite.register<ReqResApi>(new ReqResApi());
     });

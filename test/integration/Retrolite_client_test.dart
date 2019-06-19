@@ -1,7 +1,8 @@
 import 'dart:core';
+
 import 'package:retrolite/Secrets.dart';
+import 'package:retrolite/flutuate_api.dart';
 import 'package:retrolite/retrolite.dart';
-import 'package:flutuate_api/flutuate_api.dart';
 import 'package:test/test.dart';
 
 import '../../example/retrolite_example.dart';
@@ -9,22 +10,25 @@ import '../../example/tmdb/MovieGenres.dart';
 import '../../example/tmdb/TmdbApi.dart';
 
 void main() {
-  group('Retrolite client management integration tests', () {
-    Retrolite retroliteTmdbApi;
+  group('HTTP client provider to Retrolite tests', () {
+    Retrolite retrolite;
     TmdbApi api;
 
     setUpAll(() async {
-      retroliteTmdbApi = Retrolite('https://api.themoviedb.org/3/',
-          httpClient: newUnsafeHttpClient());
+      retrolite = Retrolite('https://api.themoviedb.org/3/',
+          httpClientCreator: newUnsafeHttpClient);
 
       Secrets secrets = await Secrets.loadFromFile();
 
-      api = retroliteTmdbApi
-          .register<TmdbApi>(new TmdbApi(secrets['tmdb_token']));
+      api = retrolite.register<TmdbApi>(new TmdbApi(secrets['tmdb_token']));
     });
 
     test('Get movie genres from TmdbApi', () async {
       Response<MovieGenres> genres = await api.genresForMovies();
+      expect(genres.value.genres, isNotEmpty);
+
+      // Request again to check if client was not closed.
+      genres = await api.genresForMovies();
       expect(genres.value.genres, isNotEmpty);
     });
   });

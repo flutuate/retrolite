@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:flutuate_api/flutuate_api.dart';
+import 'package:retrolite/flutuate_api.dart';
 
 mixin ResponseBodyDeserializer {
   Response parseResponseBody<TReturn>(http.Response httpResponse,
