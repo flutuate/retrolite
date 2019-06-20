@@ -6,13 +6,14 @@ import 'package:retrolite/flutuate_api.dart';
 
 import 'HeadersParser.dart';
 import 'QueryParamsParser.dart';
-import 'ResponseBodyDeserializer.dart';
+import 'package:retrolite/src/api/ResponseBuilder.dart';
 
 typedef http.BaseClient HttpClientCreator();
 
 class Retrolite
-    with HeadersParser, QueryParamsParser, ResponseBodyDeserializer
-    implements IRestClient {
+    with HeadersParser, QueryParamsParser
+    implements IRestClient
+{
   Map<Type, IApi> _apis = {};
 
   final String baseUrl;
@@ -46,7 +47,7 @@ class Retrolite
           body: parseBody(contentType, body));
 
       Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+          ResponseBuilder.build<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {
@@ -72,7 +73,7 @@ class Retrolite
           body: parseBody(contentType, body));
 
       Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+          ResponseBuilder.build<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {
@@ -98,7 +99,7 @@ class Retrolite
           body: parseBody(contentType, body));
 
       Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+        ResponseBuilder.build<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {
@@ -136,7 +137,7 @@ class Retrolite
           headers: parseHeaders(contentType, headers));
 
       Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+        ResponseBuilder.build<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {
@@ -160,7 +161,7 @@ class Retrolite
           headers: parseHeaders(contentType, headers));
 
       Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+        ResponseBuilder.build<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {
@@ -183,7 +184,7 @@ class Retrolite
           headers: parseHeaders(contentType, headers));
 
       Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+        ResponseBuilder.build<TReturn>(httpResponse, deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {

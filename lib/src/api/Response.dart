@@ -4,6 +4,10 @@ class Response<T> extends DelegatingHttpResponse {
   final T value;
 
   Response(http.Response response, this.value) : super(response);
+
+  bool get isSuccessful {
+    return super.statusCode >= 200 && super.statusCode < 300;
+  }
 }
 
 class DelegatingHttpResponse {
