@@ -1,13 +1,11 @@
 import 'package:http/http.dart' as http;
 
 class Response<T> extends DelegatingHttpResponse {
-  final T value;
+  final T body;
 
-  Response(http.Response response, this.value) : super(response);
+  Response(http.Response httpResponse, this.body) : super(httpResponse);
 
-  bool get isSuccessful {
-    return super.statusCode >= 200 && super.statusCode < 300;
-  }
+  bool get isSuccessful => super.statusCode >= 200 && super.statusCode < 300;
 }
 
 class DelegatingHttpResponse {
@@ -15,7 +13,7 @@ class DelegatingHttpResponse {
 
   DelegatingHttpResponse(this._response);
 
-  String get body => _response.body;
+  String get rawBody => _response.body;
 
   /// The (frozen) request that triggered this response.
   http.BaseRequest get request => _response.request;

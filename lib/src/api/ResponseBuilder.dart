@@ -1,26 +1,60 @@
 import 'package:http/http.dart' as http;
 import 'package:retrolite/flutuate_api.dart';
 
-class ResponseBuilder<T>
-{
+class ResponseBuilder<T> {
   static Response build<T>(http.Response httpResponse,
       {DeserializerFunction<T> deserializer}) {
     String nameType = T.toString().split(RegExp(r'\b')).first;
-    String body = httpResponse.body.trim();
+    String responseBody = httpResponse.body.trim();
 
-    switch(nameType){
+    switch (nameType) {
       case 'int':
-        return new Response<int>(httpResponse, int.parse(body));
+        return Response<int>(
+            httpResponse, buildInt(httpResponse, responseBody));
       case 'bool':
-        return new Response<bool>(httpResponse, body.toLowerCase() == 'true');
+        return Response<bool>(
+            httpResponse, buildBool(httpResponse, responseBody));
       case 'double':
-        return new Response<double>(httpResponse, double.parse(body));
+        return Response<double>(
+            httpResponse, buildDouble(httpResponse, responseBody));
+      case 'num':
+        return Response<num>(
+            httpResponse, buildNum(httpResponse, responseBody));
       case 'String':
-        return new Response<String>(httpResponse, body);
+        return Response<String>(httpResponse, responseBody);
       case 'void':
-        return new Response<void>(httpResponse, null);
+        return Response<void>(httpResponse, null);
       default:
-        return new Response<T>(httpResponse, deserializer(body));
+        return Response<T>(httpResponse,
+            buildByDeserializer<T>(httpResponse, responseBody, deserializer));
     }
+  }
+
+  static bool isSuccessful(int code) => code >= 200 && code < 300;
+
+  static int buildInt(http.Response httpResponse, String responseBody) {
+    if (!isSuccessful(httpResponse.statusCode)) return null;
+    return int.tryParse(responseBody);
+  }
+
+  static bool buildBool(http.Response httpResponse, String responseBody) {
+    if (!isSuccessful(httpResponse.statusCode)) return null;
+    return responseBody.toLowerCase() == 'true';
+  }
+
+  static double buildDouble(http.Response httpResponse, String responseBody) {
+    if (!isSuccessful(httpResponse.statusCode)) return null;
+    return double.tryParse(responseBody);
+  }
+
+  static num buildNum(http.Response httpResponse, String responseBody) {
+    if (!isSuccessful(httpResponse.statusCode)) return null;
+    return num.tryParse(responseBody);
+  }
+
+  static T buildByDeserializer<T>(http.Response httpResponse,
+      String responseBody, DeserializerFunction<T> deserializer) {
+    if (!isSuccessful(httpResponse.statusCode)) return null;
+    return deserializer(responseBody);
   }
 }

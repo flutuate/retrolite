@@ -25,7 +25,7 @@ void main() {
 
     test('Get upcoming movies', () async {
       Response<UpcomingMovies> upcomingMovies = await api.upcomingMovies();
-      expect(upcomingMovies.value.movies, isNotEmpty);
+      expect(upcomingMovies.body.movies, isNotEmpty);
     });
   });
 }

@@ -31,7 +31,7 @@ void listMoviesGenresFromTmdbApi() async {
         retrolite.register<TmdbApi>(new TmdbApi(secrets['tmdb_token']));
 
     await api.genresForMovies().then((response) {
-      for (var genre in response.value.genres) {
+      for (var genre in response.body.genres) {
         print(genre.toJson());
       }
     });
@@ -55,7 +55,7 @@ void registerFromReqResApi() async {
   RegisterContent content = new RegisterContent('eve.holt@reqres.in', 'pistol');
 
   await api.register(content).then((response) {
-    print(response.value.toJson());
+    print(response.body.toJson());
   });
   print('');
 }

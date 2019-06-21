@@ -25,9 +25,9 @@ void main() {
       RegisterContent content =
           new RegisterContent('eve.holt@reqres.in', 'pistol');
       Response<RegisterResult> response = await api.register(content);
-      expect(response.value, isNotNull);
-      expect(response.value.id, isNotNull);
-      expect(response.value.token, isNotNull);
+      expect(response.body, isNotNull);
+      expect(response.body.id, isNotNull);
+      expect(response.body.token, isNotNull);
     });
   });
 }

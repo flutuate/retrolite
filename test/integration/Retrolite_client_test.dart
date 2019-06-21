@@ -25,11 +25,11 @@ void main() {
 
     test('Get movie genres from TmdbApi', () async {
       Response<MovieGenres> genres = await api.genresForMovies();
-      expect(genres.value.genres, isNotEmpty);
+      expect(genres.body.genres, isNotEmpty);
 
       // Request again to check if client was not closed.
       genres = await api.genresForMovies();
-      expect(genres.value.genres, isNotEmpty);
+      expect(genres.body.genres, isNotEmpty);
     });
   });
 }
