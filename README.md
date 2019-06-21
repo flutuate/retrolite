@@ -1,5 +1,8 @@
 # retrolite
-**retrolite** is a RESTful API client for Dart and Flutter, with a simple API syntax, without reflection. 
+**retrolite** is a RESTful API client for Dart and Flutter, with a simple API syntax, without reflection.
+
+This package uses the abstraction classes from [**flutuate_api**](https://github.com/flutuate/retrolite/blob/master/lib/flutuate_api.dart),
+used to create RESTful api clients. 
 
 ## Configuration
 Add `retrolite` to `pubspec.yaml` under the `dependencies` field.

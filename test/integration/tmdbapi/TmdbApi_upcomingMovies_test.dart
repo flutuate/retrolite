@@ -1,7 +1,8 @@
 import 'dart:core';
+
 import 'package:retrolite/Secrets.dart';
+import 'package:retrolite/flutuate_api.dart' show Response;
 import 'package:retrolite/retrolite.dart';
-import 'package:flutuate_api/flutuate_api.dart' show Response;
 import 'package:test/test.dart';
 
 import '../../../example/retrolite_example.dart';
@@ -15,7 +16,7 @@ void main() {
 
     setUpAll(() async {
       retrolite = Retrolite('https://api.themoviedb.org/3/',
-          httpClient: newUnsafeHttpClient());
+          httpClientCreator: newUnsafeHttpClient);
 
       Secrets secrets = await Secrets.loadFromFile();
 
@@ -24,7 +25,7 @@ void main() {
 
     test('Get upcoming movies', () async {
       Response<UpcomingMovies> upcomingMovies = await api.upcomingMovies();
-      expect(upcomingMovies.value.movies, isNotEmpty);
+      expect(upcomingMovies.body.movies, isNotEmpty);
     });
   });
 }

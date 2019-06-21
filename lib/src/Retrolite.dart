@@ -1,29 +1,81 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 
-import 'package:flutuate_api/flutuate_api.dart';
+import 'package:http/http.dart' as http;
+import 'package:retrolite/flutuate_api.dart';
 
 import 'HeadersParser.dart';
 import 'QueryParamsParser.dart';
-import 'ResponseBodyDeserializer.dart';
+import 'package:retrolite/src/api/ResponseBuilder.dart';
 
-class Retrolite
-    with HeadersParser, QueryParamsParser, ResponseBodyDeserializer
-    implements IRestClient {
+typedef http.BaseClient HttpClientCreator();
+
+class Retrolite with HeadersParser, QueryParamsParser implements IRestClient {
   Map<Type, IApi> _apis = {};
 
   final String baseUrl;
 
-  final http.BaseClient httpClient;
+  final HttpClientCreator clientCreator;
 
-  Retrolite(String baseUrl, {http.BaseClient httpClient})
-      : httpClient = httpClient ?? newDefaultHttpClient(),
+  Retrolite(String baseUrl, {HttpClientCreator httpClientCreator})
+      : clientCreator = httpClientCreator ?? newDefaultHttpClient,
         baseUrl = baseUrl.trim() {
     /*TODO Logger.root.level = Level.ALL; // defaults to Level.INFO
     Logger.root.onRecord.listen((record) {
       print('${record.level.name}: ${record.time}: ${record.message}');
     });*/
+  }
+
+  /// Make a PUT request.
+  @override
+  Future<Response<TReturn>> patch<TReturn>(String route,
+      {List<Header> headers,
+      ContentType contentType,
+      Map<String, dynamic> formDataParameters,
+      Map<String, dynamic> queryParameters,
+      dynamic body,
+      DeserializerFunction<TReturn> deserializer}) async {
+    final httpClient = clientCreator();
+
+    try {
+      http.Response httpResponse = await httpClient.patch(
+          parseUrl(route, queryParameters),
+          headers: parseHeaders(contentType, headers),
+          body: parseBody(contentType, body));
+
+      Response<TReturn> response = ResponseBuilder.build<TReturn>(httpResponse,
+          deserializer: deserializer);
+
+      return Future<Response<TReturn>>.value(response);
+    } finally {
+      httpClient.close();
+    }
+  }
+
+  /// Make a PUT request.
+  @override
+  Future<Response<TReturn>> put<TReturn>(String route,
+      {List<Header> headers,
+      ContentType contentType,
+      Map<String, dynamic> formDataParameters,
+      Map<String, dynamic> queryParameters,
+      dynamic body,
+      DeserializerFunction<TReturn> deserializer}) async {
+    final httpClient = clientCreator();
+
+    try {
+      http.Response httpResponse = await httpClient.put(
+          parseUrl(route, queryParameters),
+          headers: parseHeaders(contentType, headers),
+          body: parseBody(contentType, body));
+
+      Response<TReturn> response = ResponseBuilder.build<TReturn>(httpResponse,
+          deserializer: deserializer);
+
+      return Future<Response<TReturn>>.value(response);
+    } finally {
+      httpClient.close();
+    }
   }
 
   /// Make a POST request.
@@ -35,35 +87,21 @@ class Retrolite
       Map<String, dynamic> queryParameters,
       dynamic body,
       DeserializerFunction<TReturn> deserializer}) async {
+    final httpClient = clientCreator();
+
     try {
       http.Response httpResponse = await httpClient.post(
           parseUrl(route, queryParameters),
           headers: parseHeaders(contentType, headers),
           body: parseBody(contentType, body));
 
-      Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+      Response<TReturn> response = ResponseBuilder.build<TReturn>(httpResponse,
+          deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {
       httpClient.close();
     }
-    /*Uri uri = buildUri();
-    IOClient ioClient = new IOClient(client);
-
-    http.Client client = newLoggingClient(ioClient);
-
-    http.Response response = await client.post(
-        uri,
-        headers: _buildHeaders(),
-        body: _buildContent()
-    );
-
-    // TODO falta tratar status/retornos com erros
-    String body = await response.body;
-    print(body);
-    return null;
-    */
   }
 
   /// TODO To implement conversion providers.
@@ -80,6 +118,54 @@ class Retrolite
   bool isTypeText(ContentType contentType) =>
       contentType.subType == ContentType.text.subType;
 
+  /// Make a DELETE request.
+  @override
+  Future<Response<TReturn>> delete<TReturn>(String route,
+      {List<Header> headers,
+      ContentType contentType,
+      Map<String, dynamic> queryParameters,
+      Map<String, dynamic> formDataParameters,
+      DeserializerFunction<TReturn> deserializer}) async {
+    final httpClient = clientCreator();
+
+    try {
+      http.Response httpResponse = await httpClient.delete(
+          parseUrl(route, queryParameters),
+          headers: parseHeaders(contentType, headers));
+
+      Response<TReturn> response = ResponseBuilder.build<TReturn>(httpResponse,
+          deserializer: deserializer);
+
+      return Future<Response<TReturn>>.value(response);
+    } finally {
+      httpClient.close();
+    }
+  }
+
+  /// Make a HEAD request.
+  @override
+  Future<Response<TReturn>> head<TReturn>(String route,
+      {List<Header> headers,
+      ContentType contentType,
+      Map<String, dynamic> queryParameters,
+      Map<String, dynamic> formDataParameters,
+      DeserializerFunction<TReturn> deserializer}) async {
+    final httpClient = clientCreator();
+
+    try {
+      http.Response httpResponse = await httpClient.head(
+          parseUrl(route, queryParameters),
+          headers: parseHeaders(contentType, headers));
+
+      Response<TReturn> response = ResponseBuilder.build<TReturn>(httpResponse,
+          deserializer: deserializer);
+
+      return Future<Response<TReturn>>.value(response);
+    } finally {
+      httpClient.close();
+    }
+  }
+
   @override
   Future<Response<TReturn>> get<TReturn>(String route,
       {List<Header> headers,
@@ -87,13 +173,15 @@ class Retrolite
       Map<String, dynamic> queryParameters,
       Map<String, dynamic> formDataParameters,
       DeserializerFunction<TReturn> deserializer}) async {
+    final httpClient = clientCreator();
+
     try {
       http.Response httpResponse = await httpClient.get(
           parseUrl(route, queryParameters),
           headers: parseHeaders(contentType, headers));
 
-      Response<TReturn> response =
-          parseResponseBody<TReturn>(httpResponse, deserializer: deserializer);
+      Response<TReturn> response = ResponseBuilder.build<TReturn>(httpResponse,
+          deserializer: deserializer);
 
       return Future<Response<TReturn>>.value(response);
     } finally {

@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:retrolite/Secrets.dart';
-import 'package:retrolite/flutuate_http.dart';
+import 'package:retrolite/flutuate_api.dart';
 import 'package:retrolite/retrolite.dart';
-import 'package:flutuate_api/flutuate_api.dart';
 
 import 'reqres/RegisterContent.dart';
 import 'reqres/ReqResApi.dart';
@@ -22,7 +21,7 @@ void listMoviesGenresFromTmdbApi() async {
 
   Retrolite retrolite = Retrolite(
     'https://api.themoviedb.org/3/',
-    httpClient: newHttpClient(),
+    httpClientCreator: newHttpClient,
   );
 
   Secrets secrets = await Secrets.loadFromFile();
@@ -32,7 +31,7 @@ void listMoviesGenresFromTmdbApi() async {
         retrolite.register<TmdbApi>(new TmdbApi(secrets['tmdb_token']));
 
     await api.genresForMovies().then((response) {
-      for (var genre in response.value.genres) {
+      for (var genre in response.body.genres) {
         print(genre.toJson());
       }
     });
@@ -48,7 +47,7 @@ void registerFromReqResApi() async {
 
   Retrolite retrolite = Retrolite(
     'https://reqres.in',
-    httpClient: newUnsafeHttpClient(),
+    httpClientCreator: newUnsafeHttpClient,
   );
 
   ReqResApi api = retrolite.register<ReqResApi>(new ReqResApi());
@@ -56,7 +55,7 @@ void registerFromReqResApi() async {
   RegisterContent content = new RegisterContent('eve.holt@reqres.in', 'pistol');
 
   await api.register(content).then((response) {
-    print(response.value.toJson());
+    print(response.body.toJson());
   });
   print('');
 }

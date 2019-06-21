@@ -1,6 +1,6 @@
 name: retrolite
 description: A RESTful API client for Dart and Flutter, with a simple API syntax, without reflection.
-version: 1.0.0
+version: 1.1.0
 homepage: https://www.github.com/flutuate/retrolite
 author: Luciano Bonifacio Rodrigues <flutuate.io@gmail.com>
 
@@ -10,7 +10,6 @@ environment:
 dependencies:
   http: ^0.12.0+2
   collection: ^1.14.11
-  flutuate_api: ^1.0.0+2
 
 dev_dependencies:
   pedantic: ^1.0.0
