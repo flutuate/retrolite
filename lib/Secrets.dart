@@ -31,19 +31,19 @@ class Secrets extends DelegatingMap {
   /// at path '<project-folder>/test/resources/secrets.json', if not found, it
   /// will search at '<project-folder>/resources/secrets.json'.
   static Future<Secrets> loadFromFile() {
-    File file = new File('test/resources/secrets.json');
+    var file = File('test/resources/secrets.json');
     if (!file.existsSync()) {
-      file = new File('resources/secrets.json');
+      file = File('resources/secrets.json');
     }
-    final String content = file.readAsStringSync();
+    var content = file.readAsStringSync();
     var list = json.decode(content);
 
-    final Map<String, String> tokens = {};
+    var tokens = {};
     for (Map element in list) {
       var key = element.keys.first;
       var value = element.values.first;
       tokens[key] = value;
     }
-    return Future<Secrets>.value(new Secrets(tokens));
+    return Future<Secrets>.value( Secrets(tokens) );
   }
 }

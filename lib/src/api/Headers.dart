@@ -7,12 +7,12 @@ import 'package:retrolite/flutuate_api.dart';
 class Headers {
   /// Returns a [Header] representing a HTTP ```Accept``` header.
   static Header Accepts(String value, [Object parameters]) {
-    return new Header(HttpHeaders.acceptHeader, value, parameters);
+    return Header(HttpHeaders.acceptHeader, value, parameters);
   }
 
   /// Creates a customized HTTP header.
   static Header custom(String name, {Object value, List<Object> parameters}) {
-    return new Header(name, value, parameters);
+    return Header(name, value, parameters);
   }
 }
 
@@ -68,7 +68,7 @@ class Header {
         theValue += parameter.toString();
       }
     }
-    return new MapEntry<String, String>(name, theValue);
+    return MapEntry<String, String>(name, theValue);
   }
 
   /// Parses a [List] header ([Header]) parameter to [String].
